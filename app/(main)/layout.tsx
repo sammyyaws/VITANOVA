@@ -3,6 +3,9 @@
 import Navbar from "../components/UILayout/Navbar";
 import Footer from "../components/UILayout/Footer";
 
+
+
+
 export default function MainLayout({
   children,
 }: {

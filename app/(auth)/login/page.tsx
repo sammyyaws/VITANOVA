@@ -10,20 +10,26 @@ import FormCheckbox from "../../components/form/FormCheckbox";
 import { loginInitialValues } from "../../components/form/auth";
 import { loginSchema } from "../../../schemas/loginSchema";
 import  authService  from "../../../services/authService";
-
+import { useAppDispatch } from "../../store/hook";
+import { loginSuccess } from "../../store/auth/authSlice";
 
 
 
 export default function LoginPage() {
 
   const { t } = useLanguage();
+  const dispatch=useAppDispatch()
+
+  //handle suubmit function
 
   const handleSubmit = async (values: any) => {
 
     const {rememberMe, ...payload}=values;
     try {
       const response = await authService.login(payload);
-      console.log("Login successful:", response);
+      console.log("Login successful:");
+      dispatch(loginSuccess(response))
+
     } catch (error: any) {
       console.error("Login failed:", error.response.data);
     }
