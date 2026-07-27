@@ -1,8 +1,36 @@
 "use client";
 
-
 import { Provider } from "react-redux";
 import { store } from "../store/store";
+import { useEffect } from "react";
+import { loginSuccess } from "../store/auth/authSlice";
+import { loadAuth } from "../utils/authStorage";
+
+
+function ReduxInitializer({
+    children
+}:{
+    children: React.ReactNode
+}){
+
+    useEffect(()=>{
+
+        const auth = loadAuth();
+
+        if(auth){
+
+            store.dispatch(
+                loginSuccess(auth)
+            );
+
+        }
+
+    },[]);
+
+
+    return children;
+}
+
 
 
 export default function ReduxProvider({
@@ -13,7 +41,9 @@ export default function ReduxProvider({
 
     return (
         <Provider store={store}>
-            {children}
+            <ReduxInitializer>
+                {children}
+            </ReduxInitializer>
         </Provider>
     );
 }

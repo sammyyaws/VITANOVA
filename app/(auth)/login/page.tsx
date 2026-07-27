@@ -13,13 +13,13 @@ import  authService  from "../../../services/authService";
 import { useAppDispatch } from "../../store/hook";
 import { loginSuccess } from "../../store/auth/authSlice";
 import {saveAuth}  from  "../../utils/authStorage"
-
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
 
   const { t } = useLanguage();
   const dispatch=useAppDispatch()
-
+  const router =useRouter()
   //handle suubmit function
 
   const handleSubmit = async (values: any) => {
@@ -29,7 +29,15 @@ export default function LoginPage() {
      const response = await authService.login(payload);
      saveAuth(response.access,response.refresh, response.user)
      dispatch(loginSuccess(response));
+     
+     if(response.user.role=='Donor'){
+      router.push("/donor")
 
+     }
+     else if(response.user.role=="Patient"){   
+      router.push("/patient")
+     }
+     
 
 
 
