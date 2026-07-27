@@ -34,11 +34,13 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <ReduxProvider>
+   
       <body className="min-h-full flex flex-col">
+        <ReduxProvider>
         <LanguageProvider>{children}</LanguageProvider>
+          </ReduxProvider>
       </body>
-      </ReduxProvider>
+    
     </html>
   );
 }

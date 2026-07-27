@@ -12,7 +12,7 @@ import { loginSchema } from "../../../schemas/loginSchema";
 import  authService  from "../../../services/authService";
 import { useAppDispatch } from "../../store/hook";
 import { loginSuccess } from "../../store/auth/authSlice";
-
+import {saveAuth}  from  "../../utils/authStorage"
 
 
 export default function LoginPage() {
@@ -26,9 +26,12 @@ export default function LoginPage() {
 
     const {rememberMe, ...payload}=values;
     try {
-      const response = await authService.login(payload);
-      console.log("Login successful:");
-      dispatch(loginSuccess(response))
+     const response = await authService.login(payload);
+     saveAuth(response.access,response.refresh, response.user)
+     dispatch(loginSuccess(response));
+
+
+
 
     } catch (error: any) {
       console.error("Login failed:", error.response.data);
