@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+VITANOVA 
+> **Centralized Web-Based Blood Donation & Coordination Platform**
 
-## Getting Started
+VITANOVA is a centralized web platform designed to streamline and coordinate blood donation management. It bridges the gap between donors, blood banks, hospitals, and patients in need by facilitating real-time blood request tracking, inventory coordination, and donor engagement.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+  Key Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Donor Management & Scheduling:** Easy registration, eligibility checks, and appointment scheduling for donors.
+- **Real-Time Blood Requests & Matching:** Urgent request broadcasts with location-aware donor matching.
+- **Hospital & Blood Bank Inventory:** Track blood unit availability, expiration dates, and rare blood group inventory.
+- **Analytics & High-Volume Event Logging:** Track system activities, user notifications, and donor interaction history.
+- **Responsive Dashboard:** Modern, intuitive user interfaces built for mobile and desktop screens. 
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+  Tech Stack & System Thinking
 
-## Learn More
+ **Product and System Design:**
+[Miro]: Used for workflow mapping,UI wireframing and system thinking.
+  **Frontend**
+- **Framework:** [React](https://reactjs.org/)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+- **UI Components:** Stitch UI Components
 
-To learn more about Next.js, take a look at the following resources:
+ **Backend & APIs**
+- **Framework:** [Django](https://www.djangoproject.com/) / Django REST Framework
+- **Authentication:** JWT (JSON Web Tokens)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+ **Databases**
+- **Relational DB (PostgreSQL):** Core transactional data (user accounts, appointments, blood inventory records, hospital profiles).
+- **NoSQL DB (MongoDB):** Flexible, high-write data (audit logs, chat/notifications, real-time activity streams).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+ **Version Control & Repository**
+- **Monorepo Structure** hosted on GitHub. 
+ |**Hardware Dependencies**|None|Purely web-based platform for maximum accessibility across devices.|
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+  Repository Structure
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```text
+vitanova/
+├── apps/
+│   ├── frontend/            # React + Tailwind CSS Application
+│   │   ├── public/
+│   │   ├── src/
+│   │   │   ├── components/  # Reusable UI components
+│   │   │   ├── pages/       # Page views (Dashboard, Request, Profile)
+│   │   │   ├── services/    # API calls & Axios client
+│   │   │   └── App.js
+│   │   ├── package. Json
+│   │   └── tailwind.config.js
+│   │
+│   └── backend/             # Django Web Application
+│       ├── core/            # Django project configuration
+│       ├── apps/            # Django apps (donors, blood banks, requests)
+│       ├── manage.py
+│       └── requirements.txt
+│
+├── .gitignore
+└── README.md 
