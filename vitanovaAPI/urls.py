@@ -4,7 +4,7 @@ from .views import user_views
 from  rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .views.donor_views import DonorProfileCreateView, DonorProfileView
 from .views.verification_views import VerifyEmailView
-
+from  .views.organisation_view import OrganizationCreateView
 
 
 #from .views.patient_views import PatientProfileCreateView
@@ -15,5 +15,6 @@ urlpatterns = [
    path("profile/donor/", DonorProfileCreateView.as_view()),
    path("profile/donor/me/", DonorProfileView.as_view()),
    path("auth/verify-email/<int:user_id>/<str:token>/", VerifyEmailView.as_view()),
-   # path("profile/patient/", PatientProfileCreateView.as_view()),
+   path("organizations/create/",OrganizationCreateView.as_view(),name="create-organization"
+    ),
 ]
