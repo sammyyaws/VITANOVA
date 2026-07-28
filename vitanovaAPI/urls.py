@@ -5,7 +5,10 @@ from  rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshVie
 from .views.donor_views import DonorProfileCreateView, DonorProfileView
 from .views.verification_views import VerifyEmailView
 from  .views.organisation_view import OrganizationCreateView
-
+from django_rest_passwordreset.views import (
+    ResetPasswordRequestToken,
+    ResetPasswordConfirm,
+)
 
 #from .views.patient_views import PatientProfileCreateView
 urlpatterns = [
@@ -16,5 +19,11 @@ urlpatterns = [
    path("profile/donor/me/", DonorProfileView.as_view()),
    path("auth/verify-email/<int:user_id>/<str:token>/", VerifyEmailView.as_view()),
    path("organizations/create/",OrganizationCreateView.as_view(),name="create-organization"
+    ),
+     path("password-reset/",ResetPasswordRequestToken.as_view(),name="password-reset"
+    ),
+
+    path("password-reset-confirm/",ResetPasswordConfirm.as_view(),
+        name="password-reset-confirm"
     ),
 ]

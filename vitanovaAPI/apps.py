@@ -1,5 +1,10 @@
 from django.apps import AppConfig
 
 
-class VitanovaapiConfig(AppConfig):
-    name = 'vitanovaAPI'
+class VitanovaAPIConfig(AppConfig):
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "vitanovaAPI"
+
+
+    def ready(self):
+        import vitanovaAPI.signals
