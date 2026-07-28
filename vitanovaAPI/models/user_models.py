@@ -53,7 +53,7 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault("is_active", True)
 
         admin_role, created = Role.objects.get_or_create(
-            role_name="Admin"
+            role_name="SuperAdmin"
         )
 
         extra_fields["role"] = admin_role

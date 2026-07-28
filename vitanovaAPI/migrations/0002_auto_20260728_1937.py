@@ -7,13 +7,14 @@ def create_roles(apps, schema_editor):
     roles = [
         "SuperAdmin",
         "OrganizationAdmin",
-        "OrganizationStaff",
         "Donor",
         "Patient",
     ]
 
     for role_name in roles:
-        Role.objects.get_or_create(role_name=role_name)
+        Role.objects.get_or_create(
+            role_name=role_name
+        )
 
 
 def remove_roles(apps, schema_editor):
@@ -23,7 +24,6 @@ def remove_roles(apps, schema_editor):
         role_name__in=[
             "SuperAdmin",
             "OrganizationAdmin",
-            "OrganizationStaff",
             "Donor",
             "Patient",
         ]

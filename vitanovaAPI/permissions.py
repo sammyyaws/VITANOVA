@@ -17,12 +17,6 @@ class IsOrganizationAdmin(BasePermission):
         )
 
 
-class IsOrganizationStaff(BasePermission):
-    def has_permission(self, request, view):
-        return (
-            request.user.is_authenticated
-            and request.user.role.role_name == "OrganizationStaff"
-        )
 
 
 class IsPatient(BasePermission):
