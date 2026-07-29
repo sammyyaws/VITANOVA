@@ -8,6 +8,7 @@ import StatCard from "../../components/dashboard/StatCard";
 import ProgressBar from "../../components/dashboard/ProgressBar";
 import ActionButton from "../../components/dashboard/ActionButton";
 import NotificationItem from "../../components/dashboard/NotificationItem";
+import DashboardNavbar from "../../components/dashboard/DashboardNavbar";
 
 export default function RecipientDashboard() {
   const notifications = [
@@ -54,62 +55,7 @@ export default function RecipientDashboard() {
 
   return (
     <div className="bg-[#f8fafc] min-h-screen pb-16 flex flex-col justify-between w-full">
-      {/* Top Header Navbar */}
-      <nav className="h-20 bg-white border-b border-gray-100 px-6 md:px-12 flex items-center justify-between sticky top-0 z-50 w-full">
-        <div className="flex items-center gap-8">
-          <span className="text-xl font-extrabold text-gray-900 tracking-tight">
-            Vita<span className="text-primary">Nova</span>
-          </span>
-          <div className="hidden md:flex items-center gap-6 text-sm font-semibold">
-            <Link href="/patient" className="text-primary border-b-2 border-primary py-6">
-              Dashboard
-            </Link>
-            <a href="#" className="text-gray-500 hover:text-gray-900 transition-colors py-6">
-              Requests
-            </a>
-            <a href="#" className="text-gray-500 hover:text-gray-900 transition-colors py-6">
-              Inventory
-            </a>
-            <a href="#" className="text-gray-500 hover:text-gray-900 transition-colors py-6">
-              Donors
-            </a>
-          </div>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="hidden sm:block relative">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="bg-gray-50 border border-gray-100 rounded-lg px-4 py-2 text-xs outline-none focus:border-primary focus:bg-white w-48 transition-all"
-            />
-          </div>
-          <button className="bg-primary hover:bg-red-700 text-white font-bold text-xs px-4 py-2.5 rounded-lg shadow-sm transition-all">
-            Emergency Alert
-          </button>
-          {/* Notifications Icon */}
-          <button className="text-gray-500 hover:text-gray-900 p-1.5 rounded-lg hover:bg-gray-50">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" />
-            </svg>
-          </button>
-          {/* Settings Icon */}
-          <button className="text-gray-500 hover:text-gray-900 p-1.5 rounded-lg hover:bg-gray-50">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <circle cx="12" cy="12" r="3" />
-              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-            </svg>
-          </button>
-          {/* Avatar Profile */}
-          <div className="relative w-8 h-8 rounded-full overflow-hidden border border-gray-200">
-            <Image
-              src="/vitanova512.png"
-              alt="User Avatar"
-              fill
-              className="object-cover"
-            />
-          </div>
-        </div>
-      </nav>
+      <DashboardNavbar userName="Michael" userRole="Patient" dashboardType="patient" />
 
       {/* Main Content Area */}
       <main className="container mx-auto px-6 py-10 flex flex-col gap-8 w-full flex-grow">

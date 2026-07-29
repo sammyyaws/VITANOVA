@@ -8,7 +8,7 @@ export default function ContactPage() {
   const { t } = useLanguage();
   const [formData, setFormData] = useState({
     name: "John Doe",
-    email: "you@example.com",
+    email: "username@gmail.com",
     subject: "",
     message: "",
   });
