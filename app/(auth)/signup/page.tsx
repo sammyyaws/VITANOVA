@@ -40,11 +40,10 @@ const handleSubmit = async (values:RegisterFormValues)=>{
 
     console.log("Success:", response);
 
-  } catch(error:any){
-
-    console.log("Backend error:", error.response.data);
-
-  }
+  } catch (error: any) {
+  console.log("Status:", error.response?.status);
+  console.log("Response:", error.response?.data);
+}
 
 };
 

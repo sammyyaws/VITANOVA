@@ -45,6 +45,7 @@ export default function LoginPage() {
 
     } catch (error: any) {
       console.error("Login failed:", error.response.data);
+      alert(JSON.stringify(error.response.data.detail))
     }
   };
 

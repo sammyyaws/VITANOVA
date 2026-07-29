@@ -6,7 +6,7 @@ import FormikForm from "../../../components/form/FormikForm";
 import FormInput from "../../../components/form/FormInput";
 import { useLanguage } from "../../../context/LanguageContext";
 import authService from "../../../../services/authService";
-
+import { AxiosError } from "axios";
 const ResetPassword = () => {
   const { t } = useLanguage();
   const params = useParams();
@@ -35,10 +35,17 @@ const ResetPassword = () => {
       router.push("/login");
 
     } catch (error) {
-      console.error(error);
-      alert("Unable to reset password.");
+  if (error instanceof AxiosError) {
+    console.log("Status:", error.response?.status);
+    console.log("Data:", error.response?.data);
 
-    } finally {
+    alert(
+      JSON.stringify(error.response?.data.password)
+    );
+  } else {
+    console.error(error);
+  }
+} finally {
       setSubmitting(false);
     }
   };
