@@ -1,11 +1,11 @@
 from rest_framework import serializers
-from ..models.organisation_model import Organization
+from ..models.organisation_model import Organisation
 
 
 class OrganizationSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Organization
+        model = Organisation
         fields = [
             "organization_id",
             "name",

@@ -6,7 +6,7 @@ from .models.donor_models import Donor
 from .models.patients_models import Patient
 from .models.location_models import Location
 from .models.notification_models import Notification
-from .models.organisation_model import Organization
+from .models.organisation_model import Organisation
 from .models.inventory_model import Inventory
 from .models.blood_request_model import BloodRequest
 from .models.blood_donation_model import BloodDonation
@@ -20,7 +20,7 @@ class UserAdmin(BaseUserAdmin):
         "first_name",
         "last_name",
         "role",
-        "organization",
+        "organisation",
         "is_staff",
         "is_active",
     )
@@ -95,7 +95,7 @@ admin.site.register(Patient)
 admin.site.register(Location)
 admin.site.register(Notification)
 
-admin.site.register(Organization)
+admin.site.register(Organisation)
 admin.site.register(Inventory)
 admin.site.register(BloodRequest)
 admin.site.register(BloodDonation)

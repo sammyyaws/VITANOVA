@@ -9,11 +9,11 @@ class IsSuperAdmin(BasePermission):
         )
 
 
-class IsOrganizationAdmin(BasePermission):
+class IsOrganisationAdmin(BasePermission):
     def has_permission(self, request, view):
         return (
             request.user.is_authenticated
-            and request.user.role.role_name == "OrganizationAdmin"
+            and request.user.role.role_name == "OrganisationAdmin"
         )
 
 

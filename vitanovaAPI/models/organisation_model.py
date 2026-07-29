@@ -3,7 +3,7 @@ from .location_models import Location
 import uuid
 
 
-class Organization(models.Model):
+class Organisation(models.Model):
 
     HOSPITAL = "hospital"
     BLOOD_BANK = "blood_bank"

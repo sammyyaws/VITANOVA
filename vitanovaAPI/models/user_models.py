@@ -5,7 +5,7 @@ from django.contrib.auth.models import (
     BaseUserManager,
 )
 
-from .organisation_model import Organization
+from .organisation_model import Organisation
 
 
 
@@ -74,8 +74,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField(unique=True)
     phone_number = models.CharField(max_length=15, unique=True)
-    organization = models.ForeignKey(
-    Organization,
+    organisation = models.ForeignKey(
+    Organisation,
     on_delete=models.SET_NULL,
     null=True,
     blank=True
