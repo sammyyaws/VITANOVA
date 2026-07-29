@@ -2,7 +2,7 @@ from rest_framework import generics, status, permissions
 from rest_framework.response import Response
 from ..serializers import UserSerializer, LoginSerializer
 from  rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from ..           utils.send_email import send_verification_email
+from ..utils.verify_email import send_verification_email
 class RegisterUserView(generics.CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [permissions.AllowAny]

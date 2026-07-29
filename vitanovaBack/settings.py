@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
       "rest_framework_simplejwt",
     "corsheaders",
-
+  "django_rest_passwordreset",
 ]
 
 MIDDLEWARE = [
@@ -169,3 +169,8 @@ EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool)
 EMAIL_USE_SSL = config("EMAIL_USE_SSL", cast=bool)
 EMAIL_HOST_USER = config("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
+#password reset
+DJANGO_REST_PASSWORDRESET = {
+    "PASSWORD_RESET_CONFIRM_URL": "reset-password-confirm",
+}
+FRONTEND_URL = config("FRONTEND_URL")

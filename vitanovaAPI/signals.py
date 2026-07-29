@@ -1,0 +1,7 @@
+from django_rest_passwordreset.signals import reset_password_token_created
+from .utils.password_reset import password_reset_email_token_created
+
+
+reset_password_token_created.connect(
+    password_reset_email_token_created
+)
