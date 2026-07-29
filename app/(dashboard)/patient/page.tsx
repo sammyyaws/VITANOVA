@@ -8,8 +8,14 @@ import StatCard from "../../components/dashboard/StatCard";
 import ProgressBar from "../../components/dashboard/ProgressBar";
 import ActionButton from "../../components/dashboard/ActionButton";
 import NotificationItem from "../../components/dashboard/NotificationItem";
+import { useAppSelector } from "../../store/hook";
+
+
 
 export default function RecipientDashboard() {
+
+
+  ///////////beginning of damp data 
   const notifications = [
     {
       title: "Sammy Hospital - 1 unit B- available",
@@ -51,6 +57,16 @@ export default function RecipientDashboard() {
     { id: "REQ-2026-0842", date: "Jul 22, 2025 • 2 Units", status: "Fulfilled" },
     { id: "REQ-2026-0417", date: "Mar 05, 2023 • 1 Unit", status: "Fulfilled" },
   ];
+
+///////end of damp data
+
+const user=useAppSelector(state=>state.auth.user)
+
+
+
+
+
+
 
   return (
     <div className="bg-[#f8fafc] min-h-screen pb-16 flex flex-col justify-between w-full">
@@ -133,7 +149,7 @@ export default function RecipientDashboard() {
               />
             </div>
             <div className="flex flex-col">
-              <h2 className="text-2xl font-bold text-gray-900 leading-tight">Hello, Michael</h2>
+              <h2 className="text-2xl font-bold text-gray-900 leading-tight">Hello,{user?.first_name}</h2>
               <span className="text-xs font-bold text-gray-400 mt-1 uppercase tracking-wider">Patient ID: PT-123</span>
             </div>
           </div>

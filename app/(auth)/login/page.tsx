@@ -37,7 +37,9 @@ export default function LoginPage() {
      else if(response.user.role=="Patient"){   
       router.push("/patient")
      }
-     
+     else if (response.user.role=="OrganizationAdmin"){
+      router.push('/hospital')
+     }
 
 
 
