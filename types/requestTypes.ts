@@ -11,3 +11,7 @@ export interface LoginRequest {
   login: string; // can be email or phone number
   password: string;
 }
+
+export interface ForgotPasswordRequest {
+  email: string;
+}

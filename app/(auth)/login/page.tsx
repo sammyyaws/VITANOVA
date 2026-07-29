@@ -91,6 +91,14 @@ export default function LoginPage() {
             <FormInput name="login" label={t("Email or Phone number")} placeholder={t("Enter  your Phone Number or Email")} />
             <FormInput name="password" label={t("Password")} placeholder={t("Enter your password")} type="password" />
             <FormCheckbox name="rememberMe" label={t("Remember me")} disabled={false} />
+
+            <div className="flex justify-end mt-2">
+             <Link href="/forgot-password">
+              <span className="text-primary text-sm hover:underline cursor-pointer">
+            {t("Forgot Password?")}
+              </span>
+              </Link>
+            </div>
             <button type="submit" className="w-full bg-primary text-white py-3 rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors duration-200 mt-4">
               {t("Submit")}
             </button>

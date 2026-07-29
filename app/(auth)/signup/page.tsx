@@ -11,14 +11,14 @@ import { registerInitialValues } from "../../components/form/auth";
 import { registerSchema } from "../../../schemas/RegisterSchema";
 import { RegisterFormValues } from "../../../types/formTypes";
 import authService from "../../../services/authService";
-
+import { useRouter } from "next/navigation";
 
 
 
 
 export default function RegisterPage() {
   const { t } = useLanguage();
-
+const router=useRouter()
 
 
 
@@ -87,19 +87,19 @@ const handleSubmit = async (values:RegisterFormValues)=>{
   validationSchema={registerSchema}
   onSubmit={handleSubmit}
 >
-  <FormInput name="first_name" label={t("first name")} placeholder={t("Enter your first name")} />
-  <FormInput name="last_name" label={t("last name")} placeholder={t("Enter your last name")} />
-  <FormInput name="email" label={t("email")} placeholder={t("Enter your email")} type="email" />
-  <FormInput name="phone_number" label={t("phone number")} placeholder={t("Enter your phone number")} type="tel" />
+  <FormInput name="first_name" label={t("First name")} placeholder={t("Enter your first name")} />
+  <FormInput name="last_name" label={t("Last name")} placeholder={t("Enter your last name")} />
+  <FormInput name="email" label={t("Email")} placeholder={t("Enter your email")} type="email" />
+  <FormInput name="phone_number" label={t("Phone number")} placeholder={t("Enter your phone number")} type="tel" />
  <FormSelect
     name="role"
-    label={t("role")}
+    label={t("Register as")}
     options={roles.map((role) => ({ value: role.value, label: t(role.label) }))}
     placeholder={t("Select your role")}
   />
-  <FormInput name="password" label={t("password")} placeholder={t("Enter your password")} type="password" />
-  <FormInput name="confirmPassword" label={t("confirm password")} placeholder={t("Confirm your password")} type="password" />
-  <FormCheckbox name="agreeTerms" label={t("agree terms")}  disabled={false} />
+  <FormInput name="password" label={t("Password")} placeholder={t("Enter your password")} type="password" />
+  <FormInput name="confirmPassword" label={t("Confirm password")} placeholder={t("Confirm your password")} type="password" />
+  <FormCheckbox name="agreeTerms" label={t("Agree to terms")}  disabled={false} />
   <button type="submit" className="w-full bg-primary text-white py-3 rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors duration-200 mt-4">
     {t("Sign Up")}
   </button>

@@ -1,5 +1,5 @@
 import api from "./api";
-import { RegisterRequest, LoginRequest } from "../types/requestTypes";
+import { RegisterRequest, LoginRequest ,ForgotPasswordRequest} from "../types/requestTypes";
 
 const authService = {
 
@@ -13,6 +13,16 @@ const authService = {
     return response.data;
   },
 
+
+  forgotPassword: async (data: ForgotPasswordRequest) => {
+  const response = await api.post("/password-reset/", data);
+  return response.data;
+},
+
+resetPassword: async (data: { token: string; password: string }) => {
+  const response = await api.post("/password-reset-confirm/", data);
+  return response.data;
+},
 };
 
 export default authService;
