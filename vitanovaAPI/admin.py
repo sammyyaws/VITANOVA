@@ -7,8 +7,9 @@ from .models.patients_models import Patient
 from .models.location_models import Location
 from .models.notification_models import Notification
 from .models.organisation_model import Organization
-
-
+from .models.inventory_model import Inventory
+from .models.blood_request_model import BloodRequest
+from .models.blood_donation_model import BloodDonation
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
 
@@ -95,4 +96,6 @@ admin.site.register(Location)
 admin.site.register(Notification)
 
 admin.site.register(Organization)
-
+admin.site.register(Inventory)
+admin.site.register(BloodRequest)
+admin.site.register(BloodDonation)
