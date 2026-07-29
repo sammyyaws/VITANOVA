@@ -142,7 +142,23 @@ const dictionary: Dictionary = {
     "signup.promptSignIn": "Already have an account?",
     "signup.linkSignIn": "Sign in",
     "signup.badgeSecure": "Secure Data Encryption",
-    "signup.badgePartner": "Certified Healthcare Partner"
+    "signup.badgePartner": "Certified Healthcare Partner",
+    "nav.dashboard": "Dashboard",
+    "nav.requests": "Requests",
+    "nav.inventory": "Inventory",
+    "nav.searchPlaceholder": "Search...",
+    "nav.emergencyAlert": "Emergency Alert",
+    "nav.myProfile": "My Profile",
+    "nav.settings": "Settings",
+    "nav.logout": "Logout",
+    "donor.welcomeTitle": "Welcome back, Sena",
+    "donor.totalDonations": "Total Donations",
+    "donor.lastDonation": "Last Donation",
+    "donor.nextEligible": "Next Eligible",
+    "donor.eligibilityTitle": "Eligibility status",
+    "donor.donationHistory": "Donation history",
+    "donor.downloadReport": "Download Report",
+    "donor.upcomingAppointments": "Upcoming appointments"
   },
   fr: {
     // Navbar
@@ -279,7 +295,23 @@ const dictionary: Dictionary = {
     "signup.promptSignIn": "Déjà un compte?",
     "signup.linkSignIn": "Se connecter",
     "signup.badgeSecure": "Cryptage Sécurisé des Données",
-    "signup.badgePartner": "Partenaire Santé Certifié"
+    "signup.badgePartner": "Partenaire Santé Certifié",
+    "nav.dashboard": "Tableau de Bord",
+    "nav.requests": "Demandes",
+    "nav.inventory": "Inventaire",
+    "nav.searchPlaceholder": "Rechercher...",
+    "nav.emergencyAlert": "Alerte d'urgence",
+    "nav.myProfile": "Mon profil",
+    "nav.settings": "Paramètres",
+    "nav.logout": "Se déconnecter",
+    "donor.welcomeTitle": "Bon retour, Sena",
+    "donor.totalDonations": "Total des dons",
+    "donor.lastDonation": "Dernier don",
+    "donor.nextEligible": "Prochain admissible",
+    "donor.eligibilityTitle": "Statut d'admissibilité",
+    "donor.donationHistory": "Historique des dons",
+    "donor.downloadReport": "Télécharger le rapport",
+    "donor.upcomingAppointments": "Rendez-vous à venir"
   },
   es: {
     // Navbar
@@ -416,7 +448,23 @@ const dictionary: Dictionary = {
     "signup.promptSignIn": "¿Ya tienes una cuenta?",
     "signup.linkSignIn": "Inicia sesión",
     "signup.badgeSecure": "Cifrado de Datos Seguro",
-    "signup.badgePartner": "Socio de Salud Certificado"
+    "signup.badgePartner": "Socio de Salud Certificado",
+    "nav.dashboard": "Panel de control",
+    "nav.requests": "Solicitudes",
+    "nav.inventory": "Inventario",
+    "nav.searchPlaceholder": "Buscar...",
+    "nav.emergencyAlert": "Alerta de emergencia",
+    "nav.myProfile": "Mi perfil",
+    "nav.settings": "Configuración",
+    "nav.logout": "Cerrar sesión",
+    "donor.welcomeTitle": "Bienvenido de nuevo, Sena",
+    "donor.totalDonations": "Total de donaciones",
+    "donor.lastDonation": "Última donación",
+    "donor.nextEligible": "Próximo elegible",
+    "donor.eligibilityTitle": "Estado de elegibilidad",
+    "donor.donationHistory": "Historial de donaciones",
+    "donor.downloadReport": "Descargar informe",
+    "donor.upcomingAppointments": "Próximas citas"
   },
   tw: {
     // Navbar
@@ -553,7 +601,23 @@ const dictionary: Dictionary = {
     "signup.promptSignIn": "Woakɔ mu pɛn?",
     "signup.linkSignIn": "Kɔ mu seesei",
     "signup.badgeSecure": "Secure Data Encryption",
-    "signup.badgePartner": "Certified Health Partner"
+    "signup.badgePartner": "Certified Health Partner",
+    "nav.dashboard": "Nhyehyɛbea",
+    "nav.requests": "Requests",
+    "nav.inventory": "Mogya a Ɛwɔ Hɔ",
+    "nav.searchPlaceholder": "Hwehwɛ...",
+    "nav.emergencyAlert": "Ɔhaw Ho Mmuaeɛ",
+    "nav.myProfile": "Me Nsɛm",
+    "nav.settings": "Nhyehyɛeɛ",
+    "nav.logout": "Pue Firi Mu",
+    "donor.welcomeTitle": "Akwaaba san ba, Sena",
+    "donor.totalDonations": "Mogya a Woakyɛ Nyinaa",
+    "donor.lastDonation": "Mogya a Woakyɛ a Ɛtwa Toɔ",
+    "donor.nextEligible": "Berɛ a Wobɛtumi Akyɛ Bio",
+    "donor.eligibilityTitle": "Wopɛ sɛ woboa",
+    "donor.donationHistory": "Mogya a Woakyɛ Ho Nsɛm",
+    "donor.downloadReport": "Twerɛ Nsɛm No Gu Hɔ",
+    "donor.upcomingAppointments": "Nhyehyɛeɛ a Ɛreba"
   }
 };
 
