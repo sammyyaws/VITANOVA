@@ -3,12 +3,14 @@
 import React from "react";
 import Link from "next/link";
 import { useLanguage } from "../../context/LanguageContext";
+import { useAppSelector } from "../../store/hook";
 import DashboardNavbar from "../../components/dashboard/DashboardNavbar";
 import CardWrapper from "../../components/dashboard/CardWrapper";
 import StatCard from "../../components/dashboard/StatCard";
 
 export default function DonorDashboard() {
   const { t } = useLanguage();
+  const user = useAppSelector((state) => state.auth.user);
 
   const donationHistory = [
     {
@@ -54,10 +56,13 @@ export default function DonorDashboard() {
     },
   ];
 
+  const firstName = user?.first_name || "Sena";
+  const bloodType = (user as any)?.blood_type || "O+";
+
   return (
     <div className="bg-[#f8fafc] min-h-screen pb-16 flex flex-col justify-between w-full">
       {/* Dashboard Navbar */}
-      <DashboardNavbar userName="Sena" userRole="Donor" dashboardType="donor" />
+      <DashboardNavbar userName={firstName} userRole="Donor" dashboardType="donor" />
 
       {/* Main Container */}
       <main className="container mx-auto px-6 py-10 flex flex-col gap-8 w-full flex-grow">
@@ -65,7 +70,7 @@ export default function DonorDashboard() {
         <section className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 w-full">
           <div className="flex flex-col gap-1">
             <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight leading-tight">
-              {t("donor.welcomeTitle") || "Welcome back, Sena"}
+              {t("donor.welcomeTitle")?.replace("Sena", firstName) || `Welcome back, ${firstName}`}
             </h1>
             <span className="text-sm font-semibold text-gray-500">Donor ID: DN-419</span>
           </div>
@@ -75,7 +80,7 @@ export default function DonorDashboard() {
               <span className="text-[10px] font-bold uppercase tracking-widest opacity-80">Blood Type</span>
               <span className="text-xs font-bold opacity-60 mt-0.5">Universal Donor</span>
             </div>
-            <span className="text-4xl font-black tracking-tight">O+</span>
+            <span className="text-4xl font-black tracking-tight">{bloodType}</span>
           </div>
         </section>
 

@@ -10,20 +10,37 @@ import FormCheckbox from "../../components/form/FormCheckbox";
 import { loginInitialValues } from "../../components/form/auth";
 import { loginSchema } from "../../../schemas/loginSchema";
 import  authService  from "../../../services/authService";
-
-
-
+import { useAppDispatch } from "../../store/hook";
+import { loginSuccess } from "../../store/auth/authSlice";
+import {saveAuth}  from  "../../utils/authStorage"
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
 
   const { t } = useLanguage();
+  const dispatch=useAppDispatch()
+  const router =useRouter()
+  //handle suubmit function
 
   const handleSubmit = async (values: any) => {
 
     const {rememberMe, ...payload}=values;
     try {
-      const response = await authService.login(payload);
-      console.log("Login successful:", response);
+     const response = await authService.login(payload);
+     saveAuth(response.access,response.refresh, response.user)
+     dispatch(loginSuccess(response));
+     
+     if(response.user.role=='Donor'){
+      router.push("/donor")
+
+     }
+     else if(response.user.role=="Patient"){   
+      router.push("/patient")
+     }
+     
+
+
+
     } catch (error: any) {
       console.error("Login failed:", error.response.data);
     }
