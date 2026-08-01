@@ -64,7 +64,7 @@ export default function DashboardNavbar({ userName, userRole, dashboardType }: D
           <span className="text-primary font-black tracking-tight">Vita</span>
           <span className="text-gray-900 font-black tracking-tight">Nova</span>
         </Link>
-        <div className="hidden md:flex items-center gap-6 text-sm font-semibold h-[76px]">
+        <div className="hidden lg:flex items-center gap-6 text-sm font-semibold h-[76px]">
           {navItems.map((item, idx) => (
             <a 
               key={idx}
@@ -194,7 +194,7 @@ export default function DashboardNavbar({ userName, userRole, dashboardType }: D
               </div>
 
               {/* Navigation links inside dropdown (especially for mobile) */}
-              <div className="flex flex-col gap-2 border-t border-gray-50 pt-3 md:hidden">
+              <div className="flex flex-col gap-2 border-t border-gray-50 pt-3 lg:hidden">
                 {navItems.map((item, idx) => (
                   <a key={idx} href={item.path} className="text-xs font-semibold text-gray-500 hover:text-gray-900 py-1">
                     {item.name}

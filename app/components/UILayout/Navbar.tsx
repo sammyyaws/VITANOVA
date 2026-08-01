@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLanguage } from "../../context/LanguageContext";
-git 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -63,7 +62,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-8 h-full">
+        <nav className="hidden lg:flex items-center gap-8 h-full">
           {navItems.map((item) => {
             const active = getIsActive(item.path);
             return (
@@ -83,7 +82,7 @@ export default function Navbar() {
         </nav>
 
         {/* Desktop Actions */}
-        <div className="hidden md:flex items-center gap-5">
+        <div className="hidden lg:flex items-center gap-5">
           {/* Globe Switcher */}
           <div className="flex items-center gap-1.5 border border-gray-100 bg-gray-50/50 pl-2.5 pr-1.5 py-1.5 rounded-lg">
             <svg className="text-neutral" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -120,7 +119,7 @@ export default function Navbar() {
 
         {/* Mobile Toggle */}
         <button
-          className="flex md:hidden flex-col justify-between w-6 h-[17px] z-[60] outline-none"
+          className="flex lg:hidden flex-col justify-between w-6 h-[17px] z-[60] outline-none"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label="Toggle Navigation Menu"
         >
@@ -144,7 +143,7 @@ export default function Navbar() {
 
       {/* Mobile Drawer */}
       <div
-        className={`fixed top-0 right-0 w-[280px] h-screen bg-white shadow-2xl px-6 pt-24 pb-8 transition-all duration-300 ease-in-out z-50 md:hidden ${
+        className={`fixed top-0 right-0 w-[280px] h-screen bg-white shadow-2xl px-6 pt-24 pb-8 transition-all duration-300 ease-in-out z-50 lg:hidden ${
           mobileMenuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
