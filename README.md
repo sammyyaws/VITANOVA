@@ -36,28 +36,3 @@ VITANOVA is a centralized web platform designed to streamline and coordinate blo
 - **Monorepo Structure** hosted on GitHub. 
  |**Hardware Dependencies**|None|Purely web-based platform for maximum accessibility across devices.|
 
----
-
-  Repository Structure
-
-```text
-vitanova/
-├── apps/
-│   ├── frontend/            # React + Tailwind CSS Application
-│   │   ├── public/
-│   │   ├── src/
-│   │   │   ├── components/  # Reusable UI components
-│   │   │   ├── pages/       # Page views (Dashboard, Request, Profile)
-│   │   │   ├── services/    # API calls & Axios client
-│   │   │   └── App.js
-│   │   ├── package. Json
-│   │   └── tailwind.config.js
-│   │
-│   └── backend/             # Django Web Application
-│       ├── core/            # Django project configuration
-│       ├── apps/            # Django apps (donors, blood banks, requests)
-│       ├── manage.py
-│       └── requirements.txt
-│
-├── .gitignore
-└── README.md 
