@@ -46,9 +46,9 @@ class UserAdmin(BaseUserAdmin):
                 "phone_number",
             )
         }),
-        ("Organization", {
+        ("Organisation", {
             "fields": (
-                "organization",
+                "organisation",
                 "role",
             )
         }),
