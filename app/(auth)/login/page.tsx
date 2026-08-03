@@ -1,5 +1,5 @@
 "use client";
-
+import axios from "axios"
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -23,7 +23,8 @@ export default function LoginPage() {
   //handle suubmit function
 
   const handleSubmit = async (values: any) => {
-
+      console.log("handleSubmit called");
+  console.log(values);
     const {rememberMe, ...payload}=values;
     try {
      const response = await authService.login(payload);
@@ -44,9 +45,15 @@ export default function LoginPage() {
 
 
     } catch (error: any) {
-      console.error("Login failed:", error.response.data);
-      alert(JSON.stringify(error.response.data.detail))
-    }
+  if (axios.isAxiosError(error)) {
+    console.log("Status:", error.response?.status);
+    console.log("Response:", error.response?.data);
+    alert(JSON.stringify(error.response.data.detail));
+    
+  } else {
+    console.log(error);
+  }
+}
   };
 
   return (
