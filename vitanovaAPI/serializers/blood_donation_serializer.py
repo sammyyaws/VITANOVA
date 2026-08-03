@@ -1,13 +1,15 @@
 from rest_framework import serializers
+from ..models.blood_donation_model import BloodDonation
 
-from ..models.blood_donation_model import Donation
 
-
-class DonationSerializer(serializers.ModelSerializer):
+class BloodDonationSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Donation
+
+        model = BloodDonation
+
         fields = "__all__"
+
         read_only_fields = [
             "donation_id",
         ]

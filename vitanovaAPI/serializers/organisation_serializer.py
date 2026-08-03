@@ -1,15 +1,16 @@
 from rest_framework import serializers
-from ..models.organisation_model import Organisation
+from ..models.organisation_model import Organisation,OrganisationPartner
 
-
-class OrganizationSerializer(serializers.ModelSerializer):
+class OrganisationSerializer(serializers.ModelSerializer):
 
     class Meta:
+
         model = Organisation
+
         fields = [
-            "organization_id",
+            "organisation_id",
             "name",
-            "organization_type",
+            "organisation_type",
             "email",
             "phone_number",
             "registration_number",
@@ -20,8 +21,39 @@ class OrganizationSerializer(serializers.ModelSerializer):
             "updated_at",
         ]
 
+
         read_only_fields = [
-            "organization_id",
+            "organisation_id",
             "created_at",
             "updated_at",
+        ]
+
+
+
+
+
+class OrganisationPartnerSerializer(serializers.ModelSerializer):
+
+    partner_name = serializers.CharField(
+        source="partner.name",
+        read_only=True
+    )
+
+
+    class Meta:
+
+        model = OrganisationPartner
+
+        fields = [
+            "partnership_id",
+            "organisation",
+            "partner",
+            "partner_name",
+            "created_at",
+        ]
+
+
+        read_only_fields = [
+            "partnership_id",
+            "created_at",
         ]

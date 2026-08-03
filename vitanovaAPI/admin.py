@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-
+from  .models.organisation_model    import  OrganisationPartner 
 from .models.user_models import User, Role
 from .models.donor_models import Donor
 from .models.patients_models import Patient
@@ -10,6 +10,7 @@ from .models.organisation_model import Organisation
 from .models.inventory_model import Inventory
 from .models.blood_request_model import BloodRequest
 from .models.blood_donation_model import BloodDonation
+from .models.inventory_model import InventoryTransaction
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
 
@@ -99,3 +100,5 @@ admin.site.register(Organisation)
 admin.site.register(Inventory)
 admin.site.register(BloodRequest)
 admin.site.register(BloodDonation)
+admin.site.register(OrganisationPartner)
+admin.site.register(InventoryTransaction)

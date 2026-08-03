@@ -5,6 +5,8 @@ from  rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshVie
 from .views.donor_views import DonorProfileCreateView, DonorProfileView
 from .views.verification_views import VerifyEmailView
 from  .views.organisation_view import OrganizationCreateView
+from .views.hospital_dashboard_view import HospitalDashboardView
+
 from django_rest_passwordreset.views import (
     ResetPasswordRequestToken,
     ResetPasswordConfirm,
@@ -22,8 +24,8 @@ urlpatterns = [
     ),
      path("password-reset/",ResetPasswordRequestToken.as_view(),name="password-reset"
     ),
-
-    path("password-reset-confirm/",ResetPasswordConfirm.as_view(),
+  path("password-reset-confirm/",ResetPasswordConfirm.as_view(),
         name="password-reset-confirm"
     ),
+    path("hospital/dashboard/", HospitalDashboardView.as_view(), name="hospital-dashboard"),
 ]
