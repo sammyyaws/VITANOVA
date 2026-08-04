@@ -5,8 +5,10 @@ from  rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshVie
 from .views.donor_views import DonorProfileCreateView, DonorProfileView
 from .views.verification_views import VerifyEmailView
 from  .views.organisation_view import OrganizationCreateView
+from  .views.blood_issue_view import BloodIssueView
 from .views.hospital_dashboard_view import HospitalDashboardView
 from .views.donation_views import DonationAPIView
+from  .views.inventory_views import InventoryListView, InventoryDetailView, InventoryTransactionListView
 from django_rest_passwordreset.views import (
     ResetPasswordRequestToken,
     ResetPasswordConfirm,
@@ -16,6 +18,8 @@ from .views.blood_request_view import (
     ReserveBloodRequestView,
     IssueBloodRequestView,
 )
+
+
 #from .views.patient_views import PatientProfileCreateView
 urlpatterns = [
     path('register/', user_views.RegisterUserView.as_view(), name='register'),
@@ -52,4 +56,27 @@ urlpatterns = [
         IssueBloodRequestView.as_view(),
         name="issue-request",
     ),   
+      path(
+        "requests/<int:pk>/issue/",
+        BloodIssueView.as_view(),
+        name="issue-blood"
+    ),
+      path(
+        "inventory/",
+        InventoryListView.as_view(),
+        name="inventory-list",
+    ),
+
+    path(
+        "inventory/<int:pk>/",
+        InventoryDetailView.as_view(),
+        name="inventory-detail",
+    ),
+
+    path(
+        "inventory/transactions/",
+        InventoryTransactionListView.as_view(),
+        name="inventory-transactions",
+    ),
+    
 ]

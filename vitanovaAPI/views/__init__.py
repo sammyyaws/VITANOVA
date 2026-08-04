@@ -7,3 +7,4 @@ from .donor_views import *
 from .patient_views import *
 from .password_reset_view import *
 from .blood_request_view import *
+from .inventory_views import *

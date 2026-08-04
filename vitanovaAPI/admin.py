@@ -11,6 +11,7 @@ from .models.inventory_model import Inventory
 from .models.blood_request_model import BloodRequest
 from .models.blood_donation_model import BloodDonation
 from .models.inventory_model import InventoryTransaction
+from .models.blood_issue_model import BloodIssue
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
 
@@ -102,3 +103,4 @@ admin.site.register(BloodRequest)
 admin.site.register(BloodDonation)
 admin.site.register(OrganisationPartner)
 admin.site.register(InventoryTransaction)
+admin.site.register(BloodIssue)
