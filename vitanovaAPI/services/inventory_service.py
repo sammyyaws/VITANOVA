@@ -1,15 +1,16 @@
-from django.db import transaction
 from django.core.exceptions import ValidationError
+from django.db import transaction
+from django.db.models import Sum
 
-from ..models.inventory_model import Inventory, InventoryTransaction
+from ..models.inventory_model import Inventory, InventoryReservation, InventoryTransaction
 
 
 class InventoryService:
     """
-    Handles all inventory-related operations.
-    All inventory changes should go through this service.
-    """
+    Handles all inventory operations.
 
+    All inventory changes must go through this service.
+    """
 
     @staticmethod
     @transaction.atomic
@@ -26,81 +27,196 @@ class InventoryService:
         notes=None,
         unit_volume_ml=450,
     ):
-        """
-        Add blood units to inventory.
-
-        If a batch with the same:
-        - organisation
-        - blood group
-        - expiry date
-
-        exists, increase its quantity.
-        Otherwise create a new batch.
-        """
-
         if quantity_units <= 0:
-            raise ValidationError(
-                "Quantity must be greater than zero."
-            )
+            raise ValidationError("Quantity must be greater than zero.")
 
-
-        inventory = Inventory.objects.filter(
-            organisation=organisation,
-            blood_group=blood_group,
-            expiry_date=expiry_date,
-            status="AVAILABLE"
-        ).first()
-
-
-        if inventory:
-
-            inventory.quantity_units += quantity_units
-
-            inventory.save()
-
-
-        else:
-
-            inventory = Inventory.objects.create(
-
+        inventory = (
+            Inventory.objects.select_for_update()
+            .filter(
                 organisation=organisation,
-
                 blood_group=blood_group,
-
-                quantity_units=quantity_units,
-
-                donation_date=donation_date,
-
                 expiry_date=expiry_date,
-
-                unit_volume_ml=unit_volume_ml,
-
                 status="AVAILABLE",
-
-                notes=notes
             )
-
-
-        InventoryTransaction.objects.create(
-
-            inventory=inventory,
-
-            transaction_type=transaction_type,
-
-            quantity_units=quantity_units,
-
-            performed_by=performed_by,
-
-            reference_number=reference_number,
-
-            notes=notes
-
+            .first()
         )
 
+        if inventory:
+            inventory.quantity_units += quantity_units
+            inventory.save(update_fields=["quantity_units", "updated_at"])
+        else:
+            inventory = Inventory.objects.create(
+                organisation=organisation,
+                blood_group=blood_group,
+                quantity_units=quantity_units,
+                donation_date=donation_date,
+                expiry_date=expiry_date,
+                unit_volume_ml=unit_volume_ml,
+                status="AVAILABLE",
+                notes=notes,
+            )
+
+        InventoryTransaction.objects.create(
+            inventory=inventory,
+            transaction_type=transaction_type,
+            quantity_units=quantity_units,
+            performed_by=performed_by,
+            reference_number=reference_number,
+            notes=notes,
+        )
 
         return inventory
 
+    @staticmethod
+    @transaction.atomic
+    def reserve_blood(
+        *,
+        blood_request,
+        organisation,
+        blood_group,
+        quantity_units,
+        performed_by=None,
+        expires_at=None,
+        notes=None,
+    ):
+        """
+        Reserve blood without removing it.
 
+        Uses FIFO:
+        earliest expiry batches are reserved first.
+        """
+        if quantity_units <= 0:
+            raise ValidationError("Quantity must be greater than zero.")
+
+        remaining = quantity_units
+        inventories = (
+            Inventory.objects.select_for_update()
+            .filter(
+                organisation=organisation,
+                blood_group=blood_group,
+                status="AVAILABLE",
+                quantity_units__gt=0,
+            )
+            .order_by("expiry_date")
+        )
+
+        reservations = []
+
+        for inventory in inventories:
+            if remaining <= 0:
+                break
+
+            reserved_amount = (
+                InventoryReservation.objects.filter(
+                    inventory=inventory,
+                    status="ACTIVE",
+                )
+                .aggregate(total=Sum("quantity_units"))["total"]
+                or 0
+            )
+
+            available = inventory.quantity_units - reserved_amount
+
+            if available <= 0:
+                continue
+
+            units = min(available, remaining)
+
+            reservation = InventoryReservation.objects.create(
+                blood_request=blood_request,
+                inventory=inventory,
+                quantity_units=units,
+                expires_at=expires_at,
+                notes=notes,
+            )
+
+            InventoryTransaction.objects.create(
+                inventory=inventory,
+                transaction_type=InventoryTransaction.RESERVATION,
+                quantity_units=units,
+                performed_by=performed_by,
+                reference_number=str(blood_request.request_id),
+                notes="Blood reserved.",
+            )
+
+            reservations.append(reservation)
+            remaining -= units
+
+        if remaining > 0:
+            raise ValidationError("Not enough blood available.")
+
+        return reservations
+
+    @staticmethod
+    @transaction.atomic
+    def complete_reservation(
+        *,
+        reservation,
+        performed_by=None,
+        notes=None,
+    ):
+        """
+        Convert reserved blood into issued blood.
+        """
+        reservation = InventoryReservation.objects.select_for_update().get(
+            reservation_id=reservation.reservation_id
+        )
+
+        if reservation.status != "ACTIVE":
+            raise ValidationError("Reservation is not active.")
+
+        inventory = Inventory.objects.select_for_update().get(
+            inventory_id=reservation.inventory.inventory_id
+        )
+
+        if inventory.quantity_units < reservation.quantity_units:
+            raise ValidationError("Insufficient inventory.")
+
+        inventory.quantity_units -= reservation.quantity_units
+        inventory.save(update_fields=["quantity_units", "updated_at"])
+
+        reservation.status = "COMPLETED"
+        reservation.save(update_fields=["status"])
+
+        InventoryTransaction.objects.create(
+            inventory=inventory,
+            transaction_type=InventoryTransaction.REQUEST,
+            quantity_units=reservation.quantity_units,
+            performed_by=performed_by,
+            reference_number=str(reservation.blood_request.request_id),
+            notes=notes or "Blood issued.",
+        )
+
+        return inventory
+
+    @staticmethod
+    @transaction.atomic
+    def cancel_reservation(
+        *,
+        reservation,
+        performed_by=None,
+        notes=None,
+    ):
+        reservation = InventoryReservation.objects.select_for_update().get(
+            reservation_id=reservation.reservation_id
+        )
+
+        if reservation.status != "ACTIVE":
+            raise ValidationError("Reservation cannot be cancelled.")
+
+        reservation.status = "CANCELLED"
+        reservation.save(update_fields=["status"])
+
+        InventoryTransaction.objects.create(
+            inventory=reservation.inventory,
+            transaction_type=InventoryTransaction.RESERVATION_RELEASE,
+            quantity_units=reservation.quantity_units,
+            performed_by=performed_by,
+            reference_number=str(reservation.blood_request.request_id),
+            notes=notes or "Reservation cancelled.",
+        )
+
+        return reservation
 
     @staticmethod
     @transaction.atomic
@@ -113,48 +229,29 @@ class InventoryService:
         reference_number=None,
         notes=None,
     ):
-        """
-        Remove blood units from inventory.
-        """
-
         if quantity_units <= 0:
-            raise ValidationError(
-                "Quantity must be greater than zero."
-            )
+            raise ValidationError("Quantity must be greater than zero.")
 
-
-        if inventory.quantity_units < quantity_units:
-            raise ValidationError(
-                "Insufficient inventory."
-            )
-
-
-        inventory.quantity_units -= quantity_units
-
-
-        inventory.save()
-
-
-        InventoryTransaction.objects.create(
-
-            inventory=inventory,
-
-            transaction_type=transaction_type,
-
-            quantity_units=quantity_units,
-
-            performed_by=performed_by,
-
-            reference_number=reference_number,
-
-            notes=notes
-
+        inventory = Inventory.objects.select_for_update().get(
+            inventory_id=inventory.inventory_id
         )
 
+        if inventory.quantity_units < quantity_units:
+            raise ValidationError("Insufficient inventory.")
+
+        inventory.quantity_units -= quantity_units
+        inventory.save(update_fields=["quantity_units", "updated_at"])
+
+        InventoryTransaction.objects.create(
+            inventory=inventory,
+            transaction_type=transaction_type,
+            quantity_units=quantity_units,
+            performed_by=performed_by,
+            reference_number=reference_number,
+            notes=notes,
+        )
 
         return inventory
-
-
 
     @staticmethod
     @transaction.atomic
@@ -165,46 +262,21 @@ class InventoryService:
         performed_by=None,
         notes=None,
     ):
-        """
-        Manual inventory correction.
-        """
-
         if new_quantity < 0:
-
-            raise ValidationError(
-                "Quantity cannot be negative."
-            )
-
-
-        difference = (
-            new_quantity -
-            inventory.quantity_units
-        )
-
+            raise ValidationError("Quantity cannot be negative.")
 
         inventory.quantity_units = new_quantity
-
         inventory.save()
 
-
         InventoryTransaction.objects.create(
-
             inventory=inventory,
-
             transaction_type=InventoryTransaction.ADJUSTMENT,
-
-            quantity_units=abs(difference),
-
+            quantity_units=new_quantity,
             performed_by=performed_by,
-
-            notes=notes
-
+            notes=notes,
         )
 
-
         return inventory
-
-
 
     @staticmethod
     @transaction.atomic
@@ -214,28 +286,15 @@ class InventoryService:
         performed_by=None,
         notes=None,
     ):
-        """
-        Mark a blood batch as expired.
-        """
-
         inventory.status = "EXPIRED"
-
-        inventory.save()
-
+        inventory.save(update_fields=["status", "updated_at"])
 
         InventoryTransaction.objects.create(
-
             inventory=inventory,
-
             transaction_type=InventoryTransaction.EXPIRED,
-
             quantity_units=inventory.quantity_units,
-
             performed_by=performed_by,
-
-            notes=notes or "Inventory expired."
-
+            notes=notes or "Inventory expired.",
         )
-
 
         return inventory
