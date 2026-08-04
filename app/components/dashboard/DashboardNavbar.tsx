@@ -10,13 +10,16 @@ interface DashboardNavbarProps {
   userName: string;
   userRole: string;
   dashboardType: "patient" | "donor" | "hospital" | "blood-bank";
+  onRequestClick?: () => void;
 }
 
-export default function DashboardNavbar({ userName, userRole, dashboardType }: DashboardNavbarProps) {
+export default function DashboardNavbar({ userName, userRole, dashboardType, onRequestClick }: DashboardNavbarProps) {
   const { language, setLanguage, t } = useLanguage();
   const router = useRouter();
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [requestsDropdownOpen, setRequestsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const requestsRef = useRef<HTMLDivElement>(null);
 
   // Map dashboard types to their custom avatar images
   const getAvatarUrl = () => {
@@ -39,6 +42,9 @@ export default function DashboardNavbar({ userName, userRole, dashboardType }: D
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setProfileDropdownOpen(false);
       }
+      if (requestsRef.current && !requestsRef.current.contains(event.target as Node)) {
+        setRequestsDropdownOpen(false);
+      }
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -49,12 +55,44 @@ export default function DashboardNavbar({ userName, userRole, dashboardType }: D
     router.push("/");
   };
 
-  const navItems = [
-    { name: t("Dashboard") || "Dashboard", path: `/${dashboardType}` },
-    { name: t("Requests") || "Requests", path: "#" },
-    { name: t("Inventory") || "Inventory", path: "#" },
-    { name: t("Donors") || "Donors", path: "#" },
-  ];
+  const getNavItems = () => {
+    switch (dashboardType) {
+      case "donor":
+        return [
+          { name: t("Dashboard") || "Dashboard", path: `/${dashboardType}` },
+          { name: t("Requests") || "Requests", path: "#requests-section" },
+          { name: t("Inventory") || "Inventory", path: "#inventory-section" },
+          { name: t("Donors") || "Donors", path: "#partners-section" },
+        ];
+      case "patient":
+        return [
+          { name: t("Dashboard") || "Dashboard", path: `/${dashboardType}` },
+          { name: t("Requests") || "Requests", path: "#requests-section" },
+          { name: t("Inventory") || "Inventory", path: "#inventory-section" },
+          { name: t("Donors") || "Donors", path: "#partners-section" },
+        ];
+      case "hospital":
+        return [
+          { name: t("Dashboard") || "Dashboard", path: `/${dashboardType}` },
+          { name: t("Requests") || "Requests", path: "/hospital/requests" },
+          { name: t("Inventory") || "Inventory", path: "/hospital/inventory" },
+          { name: t("Donors") || "Donors", path: "/hospital/donors" },
+        ];
+      case "blood-bank":
+        return [
+          { name: t("Dashboard") || "Dashboard", path: `/${dashboardType}` },
+          { name: t("Requests") || "Requests", path: "#requests-section" },
+          { name: t("Inventory") || "Inventory", path: "#inventory-section" },
+          { name: t("Donors") || "Donors", path: "#partners-section" },
+        ];
+      default:
+        return [
+          { name: t("Dashboard") || "Dashboard", path: `/${dashboardType}` },
+        ];
+    }
+  };
+
+  const navItems = getNavItems();
 
   return (
     <nav className="h-[76px] bg-white border-b border-gray-100 px-4 sm:px-6 md:px-12 flex items-center justify-between sticky top-0 z-50 w-full shadow-sm shadow-gray-100/20">
@@ -75,19 +113,70 @@ export default function DashboardNavbar({ userName, userRole, dashboardType }: D
           </div>
         </Link>
         <div className="hidden lg:flex items-center gap-6 text-sm font-semibold h-[76px]">
-          {navItems.map((item, idx) => (
-            <a 
-              key={idx}
-              href={item.path} 
-              className={`py-[27px] transition-colors leading-none flex items-center border-b-2 ${
-                idx === 0 
-                  ? "text-primary border-primary font-bold" 
-                  : "text-gray-500 hover:text-gray-900 border-transparent"
-              }`}
-            >
-              {item.name}
-            </a>
-          ))}
+          {navItems.map((item, idx) => {
+            const isRequests = item.name === "Requests" || item.name === "Request";
+            if (isRequests) {
+              return (
+                <div className="relative h-full flex items-center" ref={requestsRef} key={idx}>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setRequestsDropdownOpen(!requestsDropdownOpen);
+                    }}
+                    className={`py-[27px] transition-colors leading-none flex items-center border-b-2 border-transparent text-gray-500 hover:text-gray-900 font-semibold cursor-pointer outline-none`}
+                  >
+                    <span>{item.name}</span>
+                    <svg className={`ml-1.5 transition-transform ${requestsDropdownOpen ? "rotate-180" : ""}`} viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="3">
+                      <polyline points="6 9 12 15 18 9" />
+                    </svg>
+                  </button>
+                  {requestsDropdownOpen && (
+                    <div className="absolute left-0 mt-0 top-[70px] w-48 bg-white border border-gray-100 rounded-xl shadow-lg p-2 flex flex-col gap-1 z-[100] animate-in fade-in slide-in-from-top-2 duration-150">
+                      <button
+                        onClick={() => {
+                          setRequestsDropdownOpen(false);
+                          if (onRequestClick) {
+                            onRequestClick();
+                          }
+                        }}
+                        className="w-full text-left px-3 py-2 text-xs font-bold text-gray-700 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer flex items-center gap-1.5"
+                      >
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="3" className="text-primary">
+                          <line x1="12" y1="5" x2="12" y2="19" />
+                          <line x1="5" y1="12" x2="19" y2="12" />
+                        </svg>
+                        <span>New Request</span>
+                      </button>
+                      <Link
+                        href="/hospital/requests"
+                        onClick={() => setRequestsDropdownOpen(false)}
+                        className="w-full text-left px-3 py-2 text-xs font-bold text-gray-700 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer flex items-center gap-1.5"
+                      >
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-secondary">
+                          <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+                          <path d="M12 6v6l4 2" />
+                        </svg>
+                        <span>Active Requests</span>
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              );
+            }
+            return (
+              <a 
+                key={idx}
+                href={item.path} 
+                className={`py-[27px] transition-colors leading-none flex items-center border-b-2 ${
+                  idx === 0 
+                    ? "text-primary border-primary font-bold" 
+                    : "text-gray-500 hover:text-gray-900 border-transparent"
+                }`}
+              >
+                {item.name}
+              </a>
+            );
+          })}
         </div>
       </div>
 
@@ -200,11 +289,39 @@ export default function DashboardNavbar({ userName, userRole, dashboardType }: D
 
               {/* Navigation links inside dropdown (especially for mobile) */}
               <div className="flex flex-col gap-2 border-t border-gray-50 pt-3 lg:hidden">
-                {navItems.map((item, idx) => (
-                  <a key={idx} href={item.path} className="text-xs font-semibold text-gray-500 hover:text-gray-900 py-1">
-                    {item.name}
-                  </a>
-                ))}
+                {navItems.map((item, idx) => {
+                  const isRequests = item.name === "Requests" || item.name === "Request";
+                  if (isRequests) {
+                    return (
+                      <div key={idx} className="flex flex-col gap-1.5 pl-1.5 border-l border-gray-100 mt-0.5">
+                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{item.name}</span>
+                        <button
+                          onClick={() => {
+                            setProfileDropdownOpen(false);
+                            if (onRequestClick) {
+                              onRequestClick();
+                            }
+                          }}
+                          className="w-full text-left py-1 text-xs font-bold text-gray-700 hover:text-primary transition-colors cursor-pointer flex items-center gap-1.5"
+                        >
+                          <span>• New Request</span>
+                        </button>
+                        <Link
+                          href="/hospital/requests"
+                          onClick={() => setProfileDropdownOpen(false)}
+                          className="w-full text-left py-1 text-xs font-bold text-gray-700 hover:text-primary transition-colors cursor-pointer flex items-center gap-1.5"
+                        >
+                          <span>• Active Requests</span>
+                        </Link>
+                      </div>
+                    );
+                  }
+                  return (
+                    <a key={idx} href={item.path} className="text-xs font-semibold text-gray-500 hover:text-gray-900 py-1">
+                      {item.name}
+                    </a>
+                  );
+                })}
               </div>
 
               {/* Logout action button */}

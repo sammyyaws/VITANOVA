@@ -1,14 +1,16 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useLanguage } from "../../context/LanguageContext";
 import DashboardNavbar from "../../components/dashboard/DashboardNavbar";
 import CardWrapper from "../../components/dashboard/CardWrapper";
 import StatCard from "../../components/dashboard/StatCard";
+import BloodRequestModal from "../../components/dashboard/BloodRequestModal";
 
 export default function HospitalDashboard() {
   const { t } = useLanguage();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const inventory = [
     { type: "A+", units: 42, label: "STABLE", color: "green" },
@@ -21,7 +23,7 @@ export default function HospitalDashboard() {
     { type: "AB-", units: 7, label: "STABLE", color: "green" },
   ];
 
-  const activeRequests = [
+  const [requests, setRequests] = useState([
     {
       pt: "Pt. #4821",
       detail: "O- • 2 units",
@@ -54,7 +56,26 @@ export default function HospitalDashboard() {
       status: "QUEUED",
       priority: "LOW",
     },
-  ];
+  ]);
+
+  const handleRequestSubmit = (values: {
+    blood_group_needed: string;
+    quantity_units: number;
+    urgency_level: string;
+    required_by_time: string;
+  }) => {
+    const nextId = Math.floor(Math.random() * 900) + 4000;
+    const newRequest = {
+      pt: `Pt. #${nextId}`,
+      detail: `${values.blood_group_needed} • ${values.quantity_units} unit${values.quantity_units > 1 ? "s" : ""}`,
+      meta: `WARD 3 • DR. XAVIER`,
+      time: "Requested just now",
+      status: "PENDING",
+      priority: values.urgency_level === "EMERGENCY" ? "HIGH" : "LOW",
+    };
+    setRequests([newRequest, ...requests]);
+    setIsModalOpen(false);
+  };
 
   const transfusions = [
     {
@@ -84,7 +105,7 @@ export default function HospitalDashboard() {
   return (
     <div className="bg-[#f8fafc] min-h-screen pb-16 flex flex-col justify-between w-full">
       {/* Dashboard Navbar */}
-      <DashboardNavbar userName="Dr. Xavier" userRole="Hospital Coordinator" dashboardType="hospital" />
+
 
       {/* Main Container */}
       <main className="container mx-auto px-6 py-10 flex flex-col gap-8 w-full flex-grow">
@@ -97,7 +118,7 @@ export default function HospitalDashboard() {
         </section>
 
         {/* Inventory list */}
-        <div className="flex flex-col gap-4 w-full">
+        <div id="inventory-section" className="flex flex-col gap-4 w-full">
           <div className="flex justify-between items-center w-full">
             <h2 className="text-xl font-bold text-gray-900 tracking-tight">Inventory by blood type</h2>
             <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Last updated: 2 mins ago</span>
@@ -150,7 +171,7 @@ export default function HospitalDashboard() {
             </div>
           </div>
           <button 
-            onClick={() => alert("Restock request submitted to central blood vault!")}
+            onClick={() => setIsModalOpen(true)}
             className="bg-white hover:bg-gray-100 text-primary font-bold text-xs px-5 py-3 rounded-lg flex-shrink-0 transition-colors shadow-sm cursor-pointer"
           >
             Resolve Now
@@ -162,19 +183,19 @@ export default function HospitalDashboard() {
           {/* Left Column: Active Requests and Transfusions */}
           <section className="lg:col-span-8 flex flex-col gap-8 w-full">
             {/* Active Requests */}
-            <CardWrapper className="flex flex-col gap-5 w-full">
+            <CardWrapper id="requests-section" className="flex flex-col gap-5 w-full">
               <div className="flex justify-between items-center w-full">
                 <h3 className="text-xl font-bold text-gray-900 tracking-tight">Active requests</h3>
-                <a href="#" className="text-xs font-bold text-secondary hover:underline flex items-center gap-1">
+                <Link href="/hospital/requests" className="text-xs font-bold text-secondary hover:underline flex items-center gap-1">
                   View all
                   <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="3">
                     <polyline points="9 18 15 12 9 6" />
                   </svg>
-                </a>
+                </Link>
               </div>
 
               <div className="flex flex-col gap-4 w-full">
-                {activeRequests.map((req, idx) => (
+                {requests.map((req, idx) => (
                   <div key={idx} className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 border border-gray-50 rounded-xl gap-4 w-full">
                     <div className="flex items-center gap-4">
                       <span className={`px-2 py-0.5 rounded text-[8px] font-extrabold tracking-wider ${
@@ -225,7 +246,7 @@ export default function HospitalDashboard() {
           {/* Right Column: Partners & Monthly stats */}
           <section className="lg:col-span-4 flex flex-col gap-8 w-full">
             {/* Blood Bank Partners */}
-            <CardWrapper className="flex flex-col gap-5 w-full">
+            <CardWrapper id="partners-section" className="flex flex-col gap-5 w-full">
               <h3 className="text-lg font-bold text-gray-900 tracking-tight">Blood bank partners</h3>
               <div className="flex flex-col gap-3 w-full">
                 {partners.map((partner, idx) => (
@@ -280,7 +301,7 @@ export default function HospitalDashboard() {
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
           {/* 1. Request Blood */}
           <button 
-            onClick={() => alert("Opening blood requisition wizard...")}
+            onClick={() => setIsModalOpen(true)}
             className="flex flex-col items-center justify-center p-6 bg-primary hover:bg-red-700 text-white rounded-xl gap-2.5 transition-all hover:-translate-y-0.5 shadow-md shadow-red-100 cursor-pointer text-center w-full"
           >
             <div className="w-10 h-10 rounded-full bg-white/15 flex items-center justify-center">
@@ -349,6 +370,13 @@ export default function HospitalDashboard() {
           </div>
         </div>
       </footer>
+
+      {/* Blood Requisition Formik Modal */}
+      <BloodRequestModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleRequestSubmit}
+      />
     </div>
   );
 }

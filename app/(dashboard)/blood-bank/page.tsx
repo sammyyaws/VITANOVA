@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import CardWrapper from "../../components/dashboard/CardWrapper";
@@ -9,9 +9,11 @@ import ProgressBar from "../../components/dashboard/ProgressBar";
 import BloodTypeCard from "../../components/dashboard/BloodTypeCard";
 import NotificationItem from "../../components/dashboard/NotificationItem";
 import DashboardNavbar from "../../components/dashboard/DashboardNavbar";
+import ProcessRequestModal from "../../components/dashboard/ProcessRequestModal";
 
 export default function BloodBankDashboard() {
-  const bloodInventory = [
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [inventory, setInventory] = useState([
     { type: "A+", units: 124, status: "12 expire < 7 days", low: false },
     { type: "A-", units: 38, status: "4 expire < 7 days", low: false },
     { type: "B+", units: 76, status: "6 expire < 7 days", low: false },
@@ -20,14 +22,59 @@ export default function BloodBankDashboard() {
     { type: "O-", units: 22, status: "LOW STOCK", low: true },
     { type: "AB+", units: 44, status: "2 expire < 7 days", low: false },
     { type: "AB-", units: 18, status: "1 expires < 7 days", low: false },
-  ];
+  ]);
 
-  const outgoingRequests = [
-    { title: "NAMS medical center", subtitle: "O- • 2 units", label: "HIGH" },
-    { title: "Xavier Medical Center", subtitle: "B- • 3 units", label: "HIGH" },
-    { title: "Adobzy Clinic", subtitle: "A+ • 1 unit", label: "MED" },
-    { title: "Sammy Hospital", subtitle: "AB+ • 1 unit", label: "LOW" },
-  ];
+  const [requests, setRequests] = useState([
+    { id: "4821", title: "NAMS medical center", subtitle: "O- • 2 units", label: "HIGH", rawType: "O-", rawQty: 2, status: "PENDING" },
+    { id: "4790", title: "Xavier Medical Center", subtitle: "B- • 3 units", label: "HIGH", rawType: "B-", rawQty: 3, status: "PENDING" },
+    { id: "4755", title: "Adobzy Clinic", subtitle: "A+ • 1 unit", label: "MED", rawType: "A+", rawQty: 1, status: "PENDING" },
+    { id: "4712", title: "Sammy Hospital", subtitle: "AB+ • 1 unit", label: "LOW", rawType: "AB+", rawQty: 1, status: "PENDING" },
+  ]);
+
+  const handleProcessSubmit = (values: {
+    request_id: string;
+    blood_bag_barcode: string;
+    courier_name: string;
+    estimated_time: string;
+  }) => {
+    const targetReq = requests.find((r) => r.id === values.request_id);
+    if (!targetReq) return;
+
+    // Update request state
+    setRequests(
+      requests.map((r) =>
+        r.id === values.request_id
+          ? { ...r, status: "APPROVED", label: "APPROVED", subtitle: `${r.subtitle} • Dispatched via ${values.courier_name}` }
+          : r
+      )
+    );
+
+    // Deduct blood units from matching inventory card
+    setInventory(
+      inventory.map((inv) => {
+        if (inv.type === targetReq.rawType) {
+          const nextUnits = Math.max(0, inv.units - targetReq.rawQty);
+          return {
+            ...inv,
+            units: nextUnits,
+            status: nextUnits < 20 ? "LOW STOCK" : inv.status,
+            low: nextUnits < 20,
+          };
+        }
+        return inv;
+      })
+    );
+
+    setIsModalOpen(false);
+  };
+
+  const pendingRequestsForModal = requests
+    .filter((r) => r.status === "PENDING")
+    .map((r) => ({
+      id: r.id,
+      detail: r.subtitle,
+      origin: r.title,
+    }));
 
   const incomingDonations = [
     { name: "Donor L. Yamal", detail: "O+", time: "Today - 11:00 AM" },
@@ -72,7 +119,12 @@ export default function BloodBankDashboard() {
 
   return (
     <div className="bg-[#f8fafc] min-h-screen pb-16 flex flex-col justify-between w-full">
-      <DashboardNavbar userName="Ayebea Blood Bank" userRole="Blood Bank Admin" dashboardType="blood-bank" />
+      <DashboardNavbar 
+        userName="Ayebea Blood Bank" 
+        userRole="Blood Bank Admin" 
+        dashboardType="blood-bank" 
+        onRequestClick={() => setIsModalOpen(true)}
+      />
 
       {/* Main Content */}
       <main className="container mx-auto px-6 py-10 flex flex-col gap-8 w-full flex-grow">
@@ -107,7 +159,7 @@ export default function BloodBankDashboard() {
 
               {/* 8-card grid */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full">
-                {bloodInventory.map((item, index) => (
+                {inventory.map((item, index) => (
                   <BloodTypeCard
                     key={index}
                     bloodType={item.type}
@@ -136,7 +188,10 @@ export default function BloodBankDashboard() {
                   </p>
                 </div>
               </div>
-              <button className="bg-white hover:bg-gray-100 text-primary font-bold text-xs px-5 py-3 rounded-lg flex-shrink-0 relative z-10 transition-colors shadow-sm cursor-pointer">
+              <button 
+                onClick={() => setIsModalOpen(true)}
+                className="bg-white hover:bg-gray-100 text-primary font-bold text-xs px-5 py-3 rounded-lg flex-shrink-0 relative z-10 transition-colors shadow-sm cursor-pointer"
+              >
                 Resolve Now
               </button>
             </div>
@@ -235,7 +290,10 @@ export default function BloodBankDashboard() {
                 </button>
 
                 {/* 2. Process Request */}
-                <button className="flex flex-col items-center justify-center p-5 bg-blue-50/50 hover:bg-blue-50/80 border border-blue-100/50 rounded-xl gap-2 transition-all hover:-translate-y-0.5 cursor-pointer text-center">
+                <button 
+                  onClick={() => setIsModalOpen(true)}
+                  className="flex flex-col items-center justify-center p-5 bg-blue-50/50 hover:bg-blue-50/80 border border-blue-100/50 rounded-xl gap-2 transition-all hover:-translate-y-0.5 cursor-pointer text-center"
+                >
                   <div className="w-10 h-10 rounded-full bg-secondary text-white flex items-center justify-center">
                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5">
                       <path d="M17 1v22M3 5h12M3 19h12" />
@@ -274,7 +332,7 @@ export default function BloodBankDashboard() {
             <CardWrapper className="flex flex-col gap-4 w-full">
               <h3 className="text-lg font-bold text-gray-900 tracking-tight">Outgoing requests</h3>
               <div className="flex flex-col gap-3 w-full">
-                {outgoingRequests.map((req, idx) => (
+                {requests.map((req, idx) => (
                   <div key={idx} className="flex justify-between items-center p-3 border border-gray-50 rounded-xl hover:bg-gray-50/30 transition-colors w-full cursor-pointer group">
                     <div className="flex flex-col">
                       <span className="text-sm font-bold text-gray-900 group-hover:text-primary transition-colors">{req.title}</span>
@@ -282,9 +340,9 @@ export default function BloodBankDashboard() {
                     </div>
                     <div className="flex items-center gap-2">
                       <span className={`px-2 py-0.5 rounded text-[8px] font-extrabold tracking-wider ${
-                        req.label === "HIGH" ? "bg-red-50 text-primary" : req.label === "MED" ? "bg-blue-50 text-secondary" : "bg-gray-100 text-gray-500"
+                        req.status === "APPROVED" ? "bg-green-50 text-green-600 animate-pulse" : (req.label === "HIGH" ? "bg-red-50 text-primary" : req.label === "MED" ? "bg-blue-50 text-secondary" : "bg-gray-100 text-gray-500")
                       }`}>
-                        {req.label}
+                        {req.status === "APPROVED" ? "DISPATCHED" : req.label}
                       </span>
                       <svg className="text-gray-300 group-hover:text-primary transition-colors group-hover:translate-x-0.5 duration-200" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="3">
                         <polyline points="9 18 15 12 9 6" />
@@ -341,6 +399,14 @@ export default function BloodBankDashboard() {
           </div>
         </div>
       </footer>
+
+      {/* Requisition Fulfillment Formik Modal */}
+      <ProcessRequestModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        pendingRequests={pendingRequestsForModal}
+        onSubmit={handleProcessSubmit}
+      />
     </div>
   );
 }
