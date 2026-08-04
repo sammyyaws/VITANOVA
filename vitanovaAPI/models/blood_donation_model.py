@@ -3,8 +3,25 @@ from .donor_models import Donor
 from .organisation_model import Organisation
 
 
-
 class BloodDonation(models.Model):
+
+    BLOOD_GROUP_CHOICES = (
+        ("A+", "A+"),
+        ("A-", "A-"),
+        ("B+", "B+"),
+        ("B-", "B-"),
+        ("AB+", "AB+"),
+        ("AB-", "AB-"),
+        ("O+", "O+"),
+        ("O-", "O-"),
+    )
+
+
+    HEALTH_STATUS_CHOICES = (
+        ("PENDING", "Pending"),
+        ("PASSED", "Passed"),
+        ("FAILED", "Failed"),
+    )
 
 
     donation_id = models.AutoField(
@@ -27,7 +44,8 @@ class BloodDonation(models.Model):
 
 
     blood_group = models.CharField(
-        max_length=3
+        max_length=3,
+        choices=BLOOD_GROUP_CHOICES
     )
 
 
@@ -44,8 +62,13 @@ class BloodDonation(models.Model):
     donation_date = models.DateField()
 
 
+    expiry_date = models.DateField()
+
+
     health_check_status = models.CharField(
-        max_length=50
+        max_length=20,
+        choices=HEALTH_STATUS_CHOICES,
+        default="PENDING"
     )
 
 
@@ -53,11 +76,3 @@ class BloodDonation(models.Model):
         blank=True,
         null=True
     )
-
-
-    def __str__(self):
-
-        return (
-            f"{self.donor.user.first_name}"
-            f"-{self.blood_group}"
-        )
