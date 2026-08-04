@@ -1,0 +1,68 @@
+VitaNova Use Case Diagram
+
+left to right direction
+
+actor Donor
+actor Patient
+actor Hospital
+actor "Blood Bank" as BloodBank
+actor Administrator
+
+rectangle VitaNova {
+
+  usecase "Register Account" as UC1
+  usecase "Login" as UC2
+  usecase "Manage Profile" as UC3
+
+  usecase "Submit Blood Request" as UC4
+  usecase "View Blood Requests" as UC5
+
+  usecase "Donate Blood" as UC6
+  usecase "Manage Donation Records" as UC7
+
+  usecase "Manage Blood Inventory" as UC8
+  usecase "Reserve Blood Units" as UC9
+  usecase "Issue Blood" as UC10
+
+  usecase "Receive Notifications" as UC11
+
+  usecase "Verify Account" as UC12
+  usecase "Manage Users" as UC13
+}
+
+' General user actions
+Donor --> UC1
+Donor --> UC2
+Donor --> UC3
+Donor --> UC6
+Donor --> UC7
+Donor --> UC11
+
+Patient --> UC1
+Patient --> UC2
+Patient --> UC3
+Patient --> UC4
+Patient --> UC5
+Patient --> UC11
+
+Hospital --> UC1
+Hospital --> UC2
+Hospital --> UC3
+Hospital --> UC4
+Hospital --> UC5
+Hospital --> UC8
+Hospital --> UC10
+Hospital --> UC11
+
+BloodBank --> UC1
+BloodBank --> UC2
+BloodBank --> UC3
+BloodBank --> UC8
+BloodBank --> UC9
+BloodBank --> UC10
+BloodBank --> UC11
+
+Administrator --> UC12
+Administrator --> UC13
+
+@enduml
