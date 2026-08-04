@@ -13,3 +13,4 @@ class BloodDonationSerializer(serializers.ModelSerializer):
         read_only_fields = [
             "donation_id",
         ]
+

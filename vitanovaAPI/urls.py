@@ -6,12 +6,16 @@ from .views.donor_views import DonorProfileCreateView, DonorProfileView
 from .views.verification_views import VerifyEmailView
 from  .views.organisation_view import OrganizationCreateView
 from .views.hospital_dashboard_view import HospitalDashboardView
-
+from .views.donation_views import DonationAPIView
 from django_rest_passwordreset.views import (
     ResetPasswordRequestToken,
     ResetPasswordConfirm,
 )
-
+from .views.blood_request_view import (
+    BloodRequestListCreateView,
+    ReserveBloodRequestView,
+    IssueBloodRequestView,
+)
 #from .views.patient_views import PatientProfileCreateView
 urlpatterns = [
     path('register/', user_views.RegisterUserView.as_view(), name='register'),
@@ -28,4 +32,24 @@ urlpatterns = [
         name="password-reset-confirm"
     ),
     path("hospital/dashboard/", HospitalDashboardView.as_view(), name="hospital-dashboard"),
+     path(
+        "donations/",DonationAPIView.as_view(), name="blood-donation" ),
+     
+    path(
+        "requests/",
+        BloodRequestListCreateView.as_view(),
+        name="blood-request-list",
+    ),
+
+    path(
+        "requests/<int:pk>/reserve/",
+        ReserveBloodRequestView.as_view(),
+        name="reserve-request",
+    ),
+
+    path(
+        "requests/<int:pk>/issue/",
+        IssueBloodRequestView.as_view(),
+        name="issue-request",
+    ),   
 ]
