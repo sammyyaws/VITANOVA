@@ -1,5 +1,145 @@
-## Entity Relationship Diagram
+@startuml
+title VitaNova Entity Relationship Diagram
 
-The ER diagram below illustrates the relationships between the major database entities in VitaNova.
+entity User {
+  * id : Integer <<PK>>
+  --
+  email : String
+  password : String
+  role : String
+}
 
-![ER Diagram](diagrams/er-diagram.png)
+entity Donor {
+  * id : Integer <<PK>>
+  --
+  user_id : Integer <<FK>>
+  blood_group : String
+  availability : Boolean
+  location_id : Integer <<FK>>
+}
+
+entity Patient {
+  * id : Integer <<PK>>
+  --
+  user_id : Integer <<FK>>
+  blood_group : String
+  medical_details : Text
+}
+
+entity Organisation {
+  * id : Integer <<PK>>
+  --
+  name : String
+  type : String
+  location_id : Integer <<FK>>
+}
+
+entity Location {
+  * id : Integer <<PK>>
+  --
+  address : String
+  city : String
+}
+
+entity BloodRequest {
+  * id : Integer <<PK>>
+  --
+  patient_id : Integer <<FK>>
+  organisation_id : Integer <<FK>>
+  blood_group : String
+  quantity : Integer
+  status : String
+}
+
+entity BloodDonation {
+  * id : Integer <<PK>>
+  --
+  donor_id : Integer <<FK>>
+  organisation_id : Integer <<FK>>
+  donation_date : Date
+}
+
+entity BloodIssue {
+  * id : Integer <<PK>>
+  --
+  request_id : Integer <<FK>>
+  inventory_id : Integer <<FK>>
+  quantity : Integer
+}
+
+entity DonationAppointment {
+  * id : Integer <<PK>>
+  --
+  donor_id : Integer <<FK>>
+  organisation_id : Integer <<FK>>
+  date : Date
+}
+
+entity Inventory {
+  * id : Integer <<PK>>
+  --
+  organisation_id : Integer <<FK>>
+  blood_group : String
+  units_available : Integer
+}
+
+entity InventoryReservation {
+  * id : Integer <<PK>>
+  --
+  inventory_id : Integer <<FK>>
+  request_id : Integer <<FK>>
+  quantity : Integer
+}
+
+entity DonorMatch {
+  * id : Integer <<PK>>
+  --
+  donor_id : Integer <<FK>>
+  request_id : Integer <<FK>>
+}
+
+entity Notification {
+  * id : Integer <<PK>>
+  --
+  user_id : Integer <<FK>>
+  message : Text
+  status : String
+}
+
+entity Verification {
+  * id : Integer <<PK>>
+  --
+  user_id : Integer <<FK>>
+  verified : Boolean
+}
+
+
+User ||--|| Donor
+User ||--|| Patient
+User ||--o{ Notification
+User ||--o{ Verification
+
+Location ||--o{ Donor
+Location ||--o{ Organisation
+
+Patient ||--o{ BloodRequest
+Organisation ||--o{ BloodRequest
+
+Donor ||--o{ BloodDonation
+Organisation ||--o{ BloodDonation
+
+Organisation ||--o{ Inventory
+
+BloodRequest ||--o{ InventoryReservation
+Inventory ||--o{ InventoryReservation
+
+BloodRequest ||--o{ DonorMatch
+Donor ||--o{ DonorMatch
+
+BloodRequest ||--o{ BloodIssue
+Inventory ||--o{ BloodIssue
+
+Donor ||--o{ DonationAppointment
+Organisation ||--o{ DonationAppointment
+
+@enduml
