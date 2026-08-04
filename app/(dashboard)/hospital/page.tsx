@@ -121,7 +121,15 @@ export default function HospitalDashboard() {
         <div id="inventory-section" className="flex flex-col gap-4 w-full">
           <div className="flex justify-between items-center w-full">
             <h2 className="text-xl font-bold text-gray-900 tracking-tight">Inventory by blood type</h2>
-            <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Last updated: 2 mins ago</span>
+            <div className="flex items-center gap-3">
+              <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Last updated: 2 mins ago</span>
+              <Link href="/hospital/inventory" className="text-xs font-bold text-secondary hover:underline flex items-center gap-1">
+                View detail
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="3">
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </Link>
+            </div>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full">
@@ -198,26 +206,21 @@ export default function HospitalDashboard() {
                 {requests.map((req, idx) => (
                   <div key={idx} className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 border border-gray-50 rounded-xl gap-4 w-full">
                     <div className="flex items-center gap-4">
-                      <span className={`px-2 py-0.5 rounded text-[8px] font-extrabold tracking-wider ${
-                        req.priority === "HIGH" ? "bg-red-50 text-primary" : req.priority === "MED" ? "bg-blue-50 text-secondary" : "bg-gray-100 text-gray-500"
-                      }`}>
-                        {req.priority}
-                      </span>
+                      <div className="w-10 h-10 rounded-full bg-red-50 text-primary flex items-center justify-center font-bold text-sm flex-shrink-0">
+                        {req.pt.replace("Pt. #", "")}
+                      </div>
                       <div className="flex flex-col">
-                        <span className="text-sm font-bold text-gray-900">
-                          {req.pt} <span className="text-gray-400 font-semibold">— {req.detail}</span>
-                        </span>
-                        <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mt-0.5">{req.meta}</span>
+                        <span className="text-sm font-bold text-gray-900">{req.pt} • {req.detail}</span>
+                        <span className="text-xs text-gray-500 font-medium">{req.meta}</span>
                       </div>
                     </div>
-
-                    <div className="flex flex-col items-end gap-1.5 self-end sm:self-center">
-                      <span className={`text-[10px] font-black uppercase tracking-widest ${
-                        req.status === "IN TRANSIT" ? "text-primary animate-pulse" : req.status === "READY" ? "text-green-600" : "text-gray-400"
+                    <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+                      <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${
+                        req.status === "IN TRANSIT" ? "bg-blue-50 text-secondary" : req.status === "PENDING" ? "bg-amber-50 text-amber-600" : "bg-green-50 text-green-600"
                       }`}>
                         {req.status}
                       </span>
-                      <span className="text-[10px] text-gray-400 font-semibold">{req.time}</span>
+                      <span className="text-xs text-gray-400 font-medium">{req.time}</span>
                     </div>
                   </div>
                 ))}
@@ -225,17 +228,15 @@ export default function HospitalDashboard() {
             </CardWrapper>
 
             {/* Recent Transfusions */}
-            <CardWrapper className="flex flex-col gap-6 w-full">
-              <h3 className="text-xl font-bold text-gray-900 tracking-tight">Recent transfusions</h3>
-              <div className="flex flex-col gap-6 w-full relative pl-6 border-l-2 border-slate-100 ml-3">
-                {transfusions.map((item, idx) => (
-                  <div key={idx} className="relative w-full">
-                    {/* Circle icon on line */}
-                    <div className="absolute -left-[31px] top-1.5 w-3 h-3 rounded-full bg-secondary border-2 border-white" />
+            <CardWrapper className="flex flex-col gap-5 w-full">
+              <h3 className="text-xl font-bold text-gray-900 tracking-tight">Today&apos;s Transfusions</h3>
+              <div className="flex flex-col gap-4 w-full">
+                {transfusions.map((t, idx) => (
+                  <div key={idx} className="flex items-start gap-4 p-3 hover:bg-gray-50/50 rounded-xl transition-colors w-full">
+                    <span className="text-xs font-bold text-gray-400 mt-0.5">{t.time}</span>
                     <div className="flex flex-col">
-                      <span className="text-[10px] font-extrabold text-secondary uppercase tracking-widest">{item.time}</span>
-                      <h4 className="text-sm font-bold text-gray-900 mt-1 leading-snug">{item.pt}</h4>
-                      <p className="text-xs text-gray-400 leading-normal mt-0.5">{item.desc}</p>
+                      <span className="text-sm font-bold text-gray-900">{t.pt}</span>
+                      <span className="text-xs text-gray-500 font-medium">{t.desc}</span>
                     </div>
                   </div>
                 ))}
@@ -247,23 +248,15 @@ export default function HospitalDashboard() {
           <section className="lg:col-span-4 flex flex-col gap-8 w-full">
             {/* Blood Bank Partners */}
             <CardWrapper id="partners-section" className="flex flex-col gap-5 w-full">
-              <h3 className="text-lg font-bold text-gray-900 tracking-tight">Blood bank partners</h3>
+              <h3 className="text-xl font-bold text-gray-900 tracking-tight">Connected Network</h3>
               <div className="flex flex-col gap-3 w-full">
-                {partners.map((partner, idx) => (
-                  <div key={idx} className="flex justify-between items-center p-3 border border-gray-50 rounded-xl w-full">
-                    <div className="flex items-center gap-2.5">
-                      <span className={`w-2 h-2 rounded-full ${partner.active ? "bg-green-500" : "bg-gray-300"}`} />
-                      <span className="text-xs font-bold text-gray-900 leading-none">{partner.name}</span>
+                {partners.map((p, idx) => (
+                  <div key={idx} className="flex items-center justify-between p-3 border border-gray-50 rounded-xl w-full">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-2.5 h-2.5 rounded-full ${p.active ? "bg-green-500" : "bg-gray-300"}`} />
+                      <span className="text-sm font-semibold text-gray-900">{p.name}</span>
                     </div>
-                    {partner.active ? (
-                      <button className="text-secondary p-1 rounded-lg hover:bg-blue-50" aria-label="Call Partner">
-                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="3">
-                          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-                        </svg>
-                      </button>
-                    ) : (
-                      <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">{partner.label}</span>
-                    )}
+                    <span className="text-xs font-bold text-gray-400">{p.label}</span>
                   </div>
                 ))}
               </div>
@@ -328,8 +321,8 @@ export default function HospitalDashboard() {
           </button>
 
           {/* 3. View Inventory */}
-          <button 
-            onClick={() => alert("Redirecting to inventory list views...")}
+          <Link 
+            href="/hospital/inventory"
             className="flex flex-col items-center justify-center p-6 bg-white hover:bg-gray-50 border border-gray-100 rounded-xl gap-2.5 transition-all hover:-translate-y-0.5 shadow-sm cursor-pointer text-center w-full"
           >
             <div className="w-10 h-10 rounded-full bg-gray-50 text-secondary flex items-center justify-center">
@@ -338,21 +331,21 @@ export default function HospitalDashboard() {
               </svg>
             </div>
             <span className="text-sm font-bold text-gray-900 tracking-tight">View Inventory</span>
-          </button>
+          </Link>
 
           {/* 4. Contact Donors */}
-          <button 
-            onClick={() => alert("Opening donor communication dashboard...")}
+          <Link 
+            href="/hospital/donors"
             className="flex flex-col items-center justify-center p-6 bg-white hover:bg-gray-50 border border-gray-100 rounded-xl gap-2.5 transition-all hover:-translate-y-0.5 shadow-sm cursor-pointer text-center w-full"
           >
             <div className="w-10 h-10 rounded-full bg-gray-50 text-secondary flex items-center justify-center">
               <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <circle cx="12" cy="12" r="3" />
-                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06-.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
               </svg>
             </div>
             <span className="text-sm font-bold text-gray-900 tracking-tight">Contact Donors</span>
-          </button>
+          </Link>
         </section>
       </main>
 

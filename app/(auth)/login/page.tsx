@@ -48,7 +48,7 @@ export default function LoginPage() {
   if (axios.isAxiosError(error)) {
     console.log("Status:", error.response?.status);
     console.log("Response:", error.response?.data);
-    alert(JSON.stringify(error.response.data.detail));
+    alert(JSON.stringify(error.response?.data?.detail || "An error occurred during login."));
     
   } else {
     console.log(error);
