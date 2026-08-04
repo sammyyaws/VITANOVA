@@ -73,7 +73,6 @@ const user=useAppSelector(state=>state.auth.user)
 
   return (
     <div className="bg-[#f8fafc] min-h-screen pb-16 flex flex-col justify-between w-full">
-      <DashboardNavbar userName="Michael" userRole="Patient" dashboardType="patient" />
 
       {/* Main Content Area */}
       <main className="container mx-auto px-6 py-10 flex flex-col gap-8 w-full flex-grow">
