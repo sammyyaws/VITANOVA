@@ -13,6 +13,7 @@ import { registerSchema } from "../../../schemas/RegisterSchema";
 import { RegisterFormValues } from "../../../types/formTypes";
 import authService from "../../../services/authService";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 
 
@@ -20,6 +21,8 @@ import { useRouter } from "next/navigation";
 export default function RegisterPage() {
   const { t } = useLanguage();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const prefilledRole = searchParams.get("role") || "";
   const [statusState, setStatusState] = useState<{
     type: "success" | "error" | null;
     message: string;
@@ -122,7 +125,7 @@ export default function RegisterPage() {
 {/**Registration form with formik and yup validation */}
      
 <FormikForm
-  initialValues={registerInitialValues}
+  initialValues={{ ...registerInitialValues, role: prefilledRole || registerInitialValues.role }}
   validationSchema={registerSchema}
   onSubmit={handleSubmit}
 >

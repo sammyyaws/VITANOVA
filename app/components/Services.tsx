@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { useLanguage } from "../context/LanguageContext";
 
 interface ServiceCardProps {
@@ -9,9 +10,10 @@ interface ServiceCardProps {
   icon: React.ReactNode;
   actionText: string;
   themeClass: string;
+  href: string;
 }
 
-const ServiceCard = ({ title, description, icon, actionText, themeClass }: ServiceCardProps) => {
+const ServiceCard = ({ title, description, icon, actionText, themeClass, href }: ServiceCardProps) => {
   // Map custom theme styles in Tailwind
   const stylesMap: Record<string, { border: string; icon: string; text: string; bg: string }> = {
     blue: {
@@ -49,13 +51,13 @@ const ServiceCard = ({ title, description, icon, actionText, themeClass }: Servi
       </div>
       <h3 className="text-xl font-bold text-gray-900 mb-3 tracking-tight">{title}</h3>
       <p className="text-sm text-gray-500 leading-relaxed mb-6 flex-grow">{description}</p>
-      <a href="#" className={`inline-flex items-center gap-2 text-sm font-bold mt-auto ${currentTheme.text}`}>
+      <Link href={href} className={`inline-flex items-center gap-2 text-sm font-bold mt-auto ${currentTheme.text}`}>
         <span>{actionText}</span>
         <svg className="transition-transform duration-200 group-hover:translate-x-1" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
           <line x1="5" y1="12" x2="19" y2="12" />
           <polyline points="12 5 19 12 12 19" />
         </svg>
-      </a>
+      </Link>
     </div>
   );
 };
@@ -69,6 +71,7 @@ export default function Services() {
       description: t("services.findDonorsDesc"),
       actionText: t("services.findDonorsBtn"),
       themeClass: "blue",
+      href: "/signup?role=Donor",
       icon: (
         <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="12" cy="12" r="10" />
@@ -82,6 +85,7 @@ export default function Services() {
       description: t("services.requestBloodDesc"),
       actionText: t("services.requestBloodBtn"),
       themeClass: "red",
+      href: "/signup?role=Patient",
       icon: (
         <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor" />
@@ -93,6 +97,7 @@ export default function Services() {
       description: t("services.registerHospitalDesc"),
       actionText: t("services.registerHospitalBtn"),
       themeClass: "green",
+      href: "/signup?role=OrganizationAdmin",
       icon: (
         <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
           <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
@@ -106,6 +111,7 @@ export default function Services() {
       description: t("services.donateBloodDesc"),
       actionText: t("services.donateBloodBtn"),
       themeClass: "orange",
+      href: "/signup?role=Donor",
       icon: (
         <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
           <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
@@ -140,6 +146,7 @@ export default function Services() {
               icon={service.icon}
               actionText={service.actionText}
               themeClass={service.themeClass}
+              href={service.href}
             />
           ))}
         </div>
