@@ -273,6 +273,30 @@ Returned when the requested resource does not exist.
 
 ⸻
 
+ENDPOINT 
+
+admin/
+    api/ register/ [name='register']
+    api/ login/ [name='login']
+    api/ token/refresh/ [name='token_refresh']
+    api/ profile/donor/
+    api/ profile/donor/me/
+    api/ verify-email/<int:user_id>/<str:token>/
+    api/ organizations/create/ [name='create-organization']
+    api/ password-reset/ [name='password-reset']
+    api/ password-reset-confirm/ [name='password-reset-confirm']
+    api/ hospital/dashboard/ [name='hospital-dashboard']
+    api/ donations/ [name='blood-donation']
+    api/ requests/ [name='blood-request-list']
+    api/ requests/<int:pk>/reserve/ [name='reserve-request']
+    api/ requests/<int:pk>/issue/ [name='issue-request']
+    api/ requests/<int:pk>/issue/ [name='issue-blood']
+    api/ inventory/ [name='inventory-list']
+    api/ inventory/<int:pk>/ [name='inventory-detail']
+    api/ inventory/transactions/ [name='inventory-transactions']
+    api/ appointments/ [name='appointment-list']
+    api/ appointments/<int:pk>/ [name='appointment-detail']
+
 Future Improvements
 
 Possible improvements include:
