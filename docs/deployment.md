@@ -30,6 +30,7 @@ The application is accessible through a web browser over the internet.
 # Frontend Deployment
 
 The frontend application is deployed separately from the backend.
+The frontend application is deployed on Vercel.
 
 Deployment includes:
 
@@ -41,7 +42,7 @@ Deployment includes:
 
 # Backend Deployment
 
-The backend application is deployed on a web server.
+The backend application is deployed on Amazon EC2(Elastic Cloud) server.
 
 Deployment includes:
 
@@ -53,7 +54,8 @@ Deployment includes:
 
 # Database Deployment
 
-The production database uses PostgreSQL.
+The production database uses AWS and the engine used is PostgreSQL.
+The development database uses SQLite 
 
 Deployment includes:
 
