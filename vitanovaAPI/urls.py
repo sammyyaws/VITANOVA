@@ -20,6 +20,15 @@ from .views.blood_request_view import (
 )
 
 
+from .views.donor_match_view import (
+    DonorMatchListView,
+)
+
+from .views.appointment_view import (
+    AppointmentListCreateView,
+    AppointmentDetailView,
+)
+
 #from .views.patient_views import PatientProfileCreateView
 urlpatterns = [
     path('register/', user_views.RegisterUserView.as_view(), name='register'),
@@ -77,6 +86,46 @@ urlpatterns = [
         "inventory/transactions/",
         InventoryTransactionListView.as_view(),
         name="inventory-transactions",
+    ),
+
+        # -----------------------------
+    # Patient Request Module
+    # -----------------------------
+
+    path(
+        "patient/requests/",
+        PatientBloodRequestListCreateView.as_view(),
+        name="patient-request-list",
+    ),
+
+    path(
+        "patient/requests/<int:pk>/",
+        PatientBloodRequestDetailView.as_view(),
+        name="patient-request-detail",
+    ),
+
+    path(
+        "patient/requests/<int:pk>/cancel/",
+        CancelPatientBloodRequestView.as_view(),
+        name="patient-request-cancel",
+    ),
+
+    path(
+        "patient/requests/<int:pk>/matches/",
+        DonorMatchListView.as_view(),
+        name="patient-request-matches",
+    ),
+
+    path(
+        "appointments/",
+        AppointmentListCreateView.as_view(),
+        name="appointment-list",
+    ),
+
+    path(
+        "appointments/<int:pk>/",
+        AppointmentDetailView.as_view(),
+        name="appointment-detail",
     ),
     
 ]
