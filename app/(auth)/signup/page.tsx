@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useState } from "react";
 import Link from "next/link";
 import { useLanguage } from "../../context/LanguageContext";
 import FormikForm from "../../components/form/FormikForm";
@@ -18,34 +19,49 @@ import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
   const { t } = useLanguage();
-const router=useRouter()
+  const router = useRouter();
+  const [statusState, setStatusState] = useState<{
+    type: "success" | "error" | null;
+    message: string;
+  }>({ type: null, message: "" });
 
+  //formik onsubmit handler
+  const handleSubmit = async (values: RegisterFormValues) => {
+    const { confirmPassword, agreeTerms, ...payload } = values;
+    setStatusState({ type: null, message: "" });
 
+    try {
+      const response = await authService.register(payload);
+      console.log("Success:", response);
+      setStatusState({
+        type: "success",
+        message: t("Registered successfully! Redirecting to sign in..."),
+      });
+      setTimeout(() => {
+        router.push("/login");
+      }, 1500);
+    } catch (error: any) {
+      console.log("Status:", error.response?.status);
+      console.log("Response:", error.response?.data);
 
+      let errMsg = t("Registration failed. Incorrect information or email already registered.");
+      if (error.response?.data?.detail) {
+        errMsg = typeof error.response.data.detail === "string" 
+          ? error.response.data.detail 
+          : JSON.stringify(error.response.data.detail);
+      } else if (error.response?.data && typeof error.response.data === "object") {
+        const firstKey = Object.keys(error.response.data)[0];
+        if (firstKey) {
+          errMsg = `${firstKey}: ${error.response.data[firstKey]}`;
+        }
+      }
 
-
-
-
-
-
-
-//formik onsubmit handler
-const handleSubmit = async (values:RegisterFormValues)=>{
-
-  const {confirmPassword, agreeTerms, ...payload}=values;
-
-  try {
-
-    const response = await authService.register(payload);
-
-    console.log("Success:", response);
-
-  } catch (error: any) {
-  console.log("Status:", error.response?.status);
-  console.log("Response:", error.response?.data);
-}
-
-};
+      setStatusState({
+        type: "error",
+        message: errMsg,
+      });
+    }
+  };
 
   return (
     <div className="bg-gray-50/50 min-h-screen flex flex-col justify-between">
@@ -73,6 +89,30 @@ const handleSubmit = async (values:RegisterFormValues)=>{
             <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight mb-2">{t("signup.cardTitle")}</h1>
             <p className="text-sm text-gray-400">{t("signup.cardSubtitle")}</p>
           </div>
+
+          {/* Feedback Status Alert Banner */}
+          {statusState.type && (
+            <div
+              className={`mb-6 p-4 rounded-xl text-xs md:text-sm font-semibold flex items-center gap-3 animate-in fade-in duration-200 ${
+                statusState.type === "success"
+                  ? "bg-green-50 text-green-700 border border-green-200"
+                  : "bg-red-50 text-red-700 border border-red-200"
+              }`}
+            >
+              {statusState.type === "success" ? (
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="3" className="flex-shrink-0">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" className="flex-shrink-0">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+              )}
+              <span>{statusState.message}</span>
+            </div>
+          )}
 
 
 
