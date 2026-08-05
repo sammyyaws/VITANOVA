@@ -45,7 +45,7 @@ Deployment includes:
 The backend application is deployed on Amazon EC2(Elastic Cloud) server.
 
 Deployment includes:
-
+- Docker containerization
 - Installing project dependencies
 - Applying database migrations
 - Starting the Django application
@@ -105,7 +105,7 @@ After deployment, the system should be maintained by:
 
 Possible improvements include:
 
-- Docker containerization
+
 - CI/CD pipeline automation
 - Load balancing
 - Automatic backups
