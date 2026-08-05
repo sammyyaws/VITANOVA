@@ -24,11 +24,12 @@ SECRET_KEY = 'django-insecure-@$j+0t^1wwynwc_$&o2#==-0*v%(nkxkl!$y2w=hl(cnwi!ip^
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 ALLOWED_HOSTS = [
+    "victory-boston-foo-holder.trycloudflare.com",
+    "44.241.170.216",
     "localhost",
     "127.0.0.1",
-    "0.0.0.0",
+    "0.0.0.0"
 ]
 
 # Application definition
