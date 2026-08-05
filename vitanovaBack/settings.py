@@ -23,14 +23,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-@$j+0t^1wwynwc_$&o2#==-0*v%(nkxkl!$y2w=hl(cnwi!ip^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-ALLOWED_HOSTS = [
-    "victory-boston-foo-holder.trycloudflare.com",
-    "44.241.170.216",
-    "localhost",
-    "127.0.0.1",
-    "0.0.0.0"
-]
+
+
+
+
+
 
 # Application definition
 
@@ -197,4 +194,9 @@ ALLOWED_HOSTS = config(
     "ALLOWED_HOSTS",
     cast=lambda v: [s.strip() for s in v.split(",")]
     
+)
+
+CSRF_TRUSTED_ORIGINS = config(
+    "CSRF_TRUSTED_ORIGINS",
+    cast=lambda v: [s.strip() for s in v.split(",")]
 )
