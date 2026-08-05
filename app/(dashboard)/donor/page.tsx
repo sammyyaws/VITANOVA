@@ -1,16 +1,48 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useLanguage } from "../../context/LanguageContext";
 import { useAppSelector } from "../../store/hook";
 import DashboardNavbar from "../../components/dashboard/DashboardNavbar";
 import CardWrapper from "../../components/dashboard/CardWrapper";
 import StatCard from "../../components/dashboard/StatCard";
+import donorService from "../../services/donorService";
 
 export default function DonorDashboard() {
   const { t } = useLanguage();
   const user = useAppSelector((state) => state.auth.user);
+  const router = useRouter();
+  const [profileChecked, setProfileChecked] = useState(false);
+
+  useEffect(() => {
+    const checkProfile = async () => {
+      try {
+        await donorService.getMyProfile();
+        setProfileChecked(true);
+      } catch (err: any) {
+        if (err?.response?.status === 404) {
+          router.replace("/donor/create-profile");
+        } else {
+          // network error or other — allow through
+          setProfileChecked(true);
+        }
+      }
+    };
+    checkProfile();
+  }, [router]);
+
+  if (!profileChecked) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm text-gray-400 font-medium">Loading your dashboard…</p>
+        </div>
+      </div>
+    );
+  }
 
   const donationHistory = [
     {

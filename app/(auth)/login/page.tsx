@@ -15,6 +15,7 @@ import { loginSuccess } from "../../store/auth/authSlice";
 import {saveAuth}  from  "../../utils/authStorage";
 import Toast from "../../components/ui/Toast";
 import { useRouter } from "next/navigation";
+import donorService from "../../../services/donorService";
 
 export default function LoginPage() {
 
@@ -34,9 +35,19 @@ export default function LoginPage() {
      dispatch(loginSuccess(response));
       setToast({msg: "Login successful! Redirecting…", type: "success"});
      
-     if(response.user.role=='Donor'){
-      router.push("/donor")
-
+     if(response.user.role === 'Donor'){
+       try {
+         await donorService.getMyProfile();
+         // profile exists — go straight to dashboard
+         router.push("/donor");
+       } catch (profileErr: any) {
+         if (profileErr?.response?.status === 404) {
+           // no profile yet — go create one
+           router.push("/donor/create-profile");
+         } else {
+           router.push("/donor");
+         }
+       }
      }
      else if(response.user.role=="Patient"){   
       router.push("/patient")
