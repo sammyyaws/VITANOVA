@@ -1,11 +1,14 @@
 "use client";
+import { useState } from "react";
 
 import * as Yup from "yup";
 import FormikForm from "../../components/form/FormikForm";
 import FormInput from "../../components/form/FormInput";
 import { useLanguage } from "../../context/LanguageContext";
+import Toast from "../../components/ui/Toast";
 import authService from "../../../services/authService";
 const ForgotPassword = () => {
+  const [toast, setToast] = useState<{msg:string; type:"success"|"error"} | null>(null);
   const { t } = useLanguage();
 
 
@@ -19,14 +22,13 @@ const handleSubmit = async (
 
     console.log(response);
 
-    alert(
-      "If an account with that email exists, a password reset email has been sent."
-    );
+    setToast({msg: "If an account with that email exists, a password reset email has been sent.", type: "success"});
 
   } catch (error: any) {
-  console.log(error.response?.data);
-  console.log(error.response?.status);
-}
+    console.log(error.response?.data);
+    console.log(error.response?.status);
+    setToast({msg: error.response?.data?.detail || "Error sending reset email.", type: "error"});
+  }
   finally {
     setSubmitting(false);
   }
@@ -53,7 +55,9 @@ const handleSubmit = async (
 
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <>
+      {toast && <Toast message={toast.msg} type={toast.type} onClose={() => setToast(null)} />}
+      <div className="flex items-center justify-center min-h-screen">
 
       <FormikForm
         initialValues={{
@@ -73,6 +77,7 @@ const handleSubmit = async (
       </FormikForm>
 
     </div>
+    </>
   );
 };
 
