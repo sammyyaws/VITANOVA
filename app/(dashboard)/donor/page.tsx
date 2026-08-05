@@ -8,7 +8,7 @@ import { useAppSelector } from "../../store/hook";
 import DashboardNavbar from "../../components/dashboard/DashboardNavbar";
 import CardWrapper from "../../components/dashboard/CardWrapper";
 import StatCard from "../../components/dashboard/StatCard";
-import donorService from "../../services/donorService";
+import donorService from "../../../services/donorService";
 
 export default function DonorDashboard() {
   const { t } = useLanguage();
