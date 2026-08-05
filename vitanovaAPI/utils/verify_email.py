@@ -9,7 +9,7 @@ def send_verification_email(user):
     token = default_token_generator.make_token(user)
 
     link = (
-        f"{config('verif_endpoint')}"
+        f"{config('VERIFY_ENDPOINT')}"
         f"{user.user_id}/{token}"
     )
 
