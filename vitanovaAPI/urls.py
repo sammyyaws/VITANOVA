@@ -34,7 +34,7 @@ urlpatterns = [
    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
    path("profile/donor/", DonorProfileCreateView.as_view()),
    path("profile/donor/me/", DonorProfileView.as_view()),
-   path("auth/verify-email/<int:user_id>/<str:token>/", VerifyEmailView.as_view()),
+   path("verify-email/<int:user_id>/<str:token>/", VerifyEmailView.as_view()),
    path("organizations/create/",OrganizationCreateView.as_view(),name="create-organization"
     ),
      path("password-reset/",ResetPasswordRequestToken.as_view(),name="password-reset"
