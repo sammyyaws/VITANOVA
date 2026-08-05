@@ -12,14 +12,16 @@ import { loginSchema } from "../../../schemas/loginSchema";
 import  authService  from "../../../services/authService";
 import { useAppDispatch } from "../../store/hook";
 import { loginSuccess } from "../../store/auth/authSlice";
-import {saveAuth}  from  "../../utils/authStorage"
+import {saveAuth}  from  "../../utils/authStorage";
+import Toast from "../../components/ui/Toast";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
 
   const { t } = useLanguage();
   const dispatch=useAppDispatch()
-  const router =useRouter()
+  const router =useRouter();
+  const [toast, setToast] = useState<{msg:string; type:"success"|"error"} | null>(null);
   //handle suubmit function
 
   const handleSubmit = async (values: any) => {
@@ -30,6 +32,7 @@ export default function LoginPage() {
      const response = await authService.login(payload);
      saveAuth(response.access,response.refresh, response.user)
      dispatch(loginSuccess(response));
+      setToast({msg: "Login successful! Redirecting…", type: "success"});
      
      if(response.user.role=='Donor'){
       router.push("/donor")
@@ -48,7 +51,7 @@ export default function LoginPage() {
   if (axios.isAxiosError(error)) {
     console.log("Status:", error.response?.status);
     console.log("Response:", error.response?.data);
-    alert(JSON.stringify(error.response?.data?.detail || "An error occurred during login."));
+    setToast({msg: JSON.stringify(error.response?.data?.detail || "An error occurred during login."), type: "error"});
     
   } else {
     console.log(error);
@@ -57,7 +60,9 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="bg-gray-50/50 min-h-screen flex flex-col justify-between">
+    <>
+      {toast && <Toast message={toast.msg} type={toast.type} onClose={() => setToast(null)} />}
+      <div className="bg-gray-50/50 min-h-screen flex flex-col justify-between">
       {/* Top Header Back Button */}
       <header className="h-20 flex items-center px-8 md:px-12 w-full">
         <Link href="/" className="flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-primary transition-colors duration-200">
@@ -155,6 +160,7 @@ export default function LoginPage() {
         </div>
       </footer>
     </div>
+    </>
   );
 }
 
