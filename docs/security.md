@@ -4,7 +4,7 @@ VitaNova implements security measures to protect user information and ensure con
 
 # Authentication
 
-The system uses authentication mechanisms provided by Django REST Framework.
+The system uses authentication mechanisms provided by Django REST JWT Framework.
 
 Authenticated users receive access only to permitted resources.
 
