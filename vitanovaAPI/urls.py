@@ -20,9 +20,7 @@ from .views.blood_request_view import (
 )
 
 
-from .views.donor_match_view import (
-    DonorMatchListView,
-)
+
 
 from .views.appointment_view import (
     AppointmentListCreateView,
@@ -88,27 +86,7 @@ urlpatterns = [
         name="inventory-transactions",
     ),
 
-        # -----------------------------
-    # Patient Request Module
-    # -----------------------------
 
-    path(
-        "patient/requests/",
-        PatientBloodRequestListCreateView.as_view(),
-        name="patient-request-list",
-    ),
-
-    path(
-        "patient/requests/<int:pk>/",
-        PatientBloodRequestDetailView.as_view(),
-        name="patient-request-detail",
-    ),
-
-    path(
-        "patient/requests/<int:pk>/cancel/",
-        CancelPatientBloodRequestView.as_view(),
-        name="patient-request-cancel",
-    ),
 
     path(
         "patient/requests/<int:pk>/matches/",
