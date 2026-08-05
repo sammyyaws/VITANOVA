@@ -88,11 +88,7 @@ urlpatterns = [
 
 
 
-    path(
-        "patient/requests/<int:pk>/matches/",
-        DonorMatchListView.as_view(),
-        name="patient-request-matches",
-    ),
+
 
     path(
         "appointments/",
