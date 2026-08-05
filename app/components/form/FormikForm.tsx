@@ -7,6 +7,7 @@ import {
   FormikValues,
 } from "formik";
 import { ReactNode } from "react";
+import { FormikProps } from "formik";
 import * as Yup from "yup";
 
 interface FormikFormProps<T extends FormikValues> {
@@ -16,7 +17,7 @@ interface FormikFormProps<T extends FormikValues> {
     values: T,
     helpers: FormikHelpers<T>
   ) => void | Promise<void>;
-  children: ReactNode;
+  children: ReactNode | ((props: FormikProps<T>) => ReactNode);
 }
 
 export default function FormikForm<T extends FormikValues>({
@@ -31,7 +32,11 @@ export default function FormikForm<T extends FormikValues>({
       validationSchema={validationSchema}
       onSubmit={onSubmit}
     >
-      <Form>{children}</Form>
+      {(formikProps) => (
+        <Form>
+          {typeof children === "function" ? children(formikProps) : children}
+        </Form>
+      )}
     </Formik>
   );
 }

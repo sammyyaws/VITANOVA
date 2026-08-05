@@ -25,7 +25,7 @@ export default function LoginPage() {
   const [toast, setToast] = useState<{msg:string; type:"success"|"error"} | null>(null);
   //handle suubmit function
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: any, { setSubmitting }: any) => {
       console.log("handleSubmit called");
   console.log(values);
     const {rememberMe, ...payload}=values;
@@ -56,8 +56,6 @@ export default function LoginPage() {
       router.push('/hospital')
      }
 
-
-
     } catch (error: any) {
   if (axios.isAxiosError(error)) {
     console.log("Status:", error.response?.status);
@@ -67,6 +65,8 @@ export default function LoginPage() {
   } else {
     console.log(error);
   }
+} finally {
+  setSubmitting(false);
 }
   };
 
@@ -112,20 +112,35 @@ export default function LoginPage() {
             validationSchema={loginSchema}
             onSubmit={handleSubmit}
           >
-            <FormInput name="login" label={t("Email or Phone number")} placeholder={t("Enter  your Phone Number or Email")} />
-            <FormInput name="password" label={t("Password")} placeholder={t("Enter your password")} type="password" />
-            <FormCheckbox name="rememberMe" label={t("Remember me")} disabled={false} />
+            {({ isSubmitting }) => (
+              <>
+                <FormInput name="login" label={t("Email or Phone number")} placeholder={t("Enter  your Phone Number or Email")} />
+                <FormInput name="password" label={t("Password")} placeholder={t("Enter your password")} type="password" />
+                <FormCheckbox name="rememberMe" label={t("Remember me")} disabled={false} />
 
-            <div className="flex justify-end mt-2">
-             <Link href="/forgot-password">
-              <span className="text-primary text-sm hover:underline cursor-pointer">
-            {t("Forgot Password?")}
-              </span>
-              </Link>
-            </div>
-            <button type="submit" className="w-full bg-primary text-white py-3 rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors duration-200 mt-4">
-              {t("Submit")}
-            </button>
+                <div className="flex justify-end mt-2">
+                 <Link href="/forgot-password">
+                  <span className="text-primary text-sm hover:underline cursor-pointer">
+                {t("Forgot Password?")}
+                  </span>
+                  </Link>
+                </div>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full bg-primary text-white py-3 rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors duration-200 mt-4 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <span>{t("Submitting...")}</span>
+                    </>
+                  ) : (
+                    <span>{t("Submit")}</span>
+                  )}
+                </button>
+              </>
+            )}
           </FormikForm>
 
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import Link from "next/link";
 import { useLanguage } from "../../context/LanguageContext";
 import FormikForm from "../../components/form/FormikForm";
@@ -15,10 +15,7 @@ import authService from "../../../services/authService";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 
-
-
-
-export default function RegisterPage() {
+function RegisterContent() {
   const { t } = useLanguage();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -129,22 +126,37 @@ export default function RegisterPage() {
   validationSchema={registerSchema}
   onSubmit={handleSubmit}
 >
-  <FormInput name="first_name" label={t("First name")} placeholder={t("Enter your first name")} />
-  <FormInput name="last_name" label={t("Last name")} placeholder={t("Enter your last name")} />
-  <FormInput name="email" label={t("Email")} placeholder={t("Enter your email")} type="email" />
-  <FormInput name="phone_number" label={t("Phone number")} placeholder={t("Enter your phone number")} type="tel" />
- <FormSelect
-    name="role"
-    label={t("Register as")}
-    options={roles.map((role) => ({ value: role.value, label: t(role.label) }))}
-    placeholder={t("Select your role")}
-  />
-  <FormInput name="password" label={t("Password")} placeholder={t("Enter your password")} type="password" />
-  <FormInput name="confirmPassword" label={t("Confirm password")} placeholder={t("Confirm your password")} type="password" />
-  <FormCheckbox name="agreeTerms" label={t("Agree to terms")}  disabled={false} />
-  <button type="submit" className="w-full bg-primary text-white py-3 rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors duration-200 mt-4">
-    {t("Sign Up")}
-  </button>
+  {({ isSubmitting }) => (
+    <>
+      <FormInput name="first_name" label={t("First name")} placeholder={t("Enter your first name")} />
+      <FormInput name="last_name" label={t("Last name")} placeholder={t("Enter your last name")} />
+      <FormInput name="email" label={t("Email")} placeholder={t("Enter your email")} type="email" />
+      <FormInput name="phone_number" label={t("Phone number")} placeholder={t("Enter your phone number")} type="tel" />
+      <FormSelect
+        name="role"
+        label={t("Register as")}
+        options={roles.map((role) => ({ value: role.value, label: t(role.label) }))}
+        placeholder={t("Select your role")}
+      />
+      <FormInput name="password" label={t("Password")} placeholder={t("Enter your password")} type="password" />
+      <FormInput name="confirmPassword" label={t("Confirm password")} placeholder={t("Confirm your password")} type="password" />
+      <FormCheckbox name="agreeTerms" label={t("Agree to terms")}  disabled={false} />
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        className="w-full bg-primary text-white py-3 rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors duration-200 mt-4 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+      >
+        {isSubmitting ? (
+          <>
+            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            <span>{t("Submitting...")}</span>
+          </>
+        ) : (
+          <span>{t("Sign Up")}</span>
+        )}
+      </button>
+    </>
+  )}
 </FormikForm>
 
 
@@ -202,5 +214,17 @@ export default function RegisterPage() {
         </div>
       </footer>
     </div>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    }>
+      <RegisterContent />
+    </Suspense>
   );
 }
